@@ -1,0 +1,19 @@
+version: "3.2"
+services:
+  ponto-ui:
+    image: node:alpine
+    container_name: ponto
+    restart: always
+    env_file: 
+      - .env
+    ports: 
+      - 3000:3000
+    volumes: 
+      - .:/usr/app
+    working_dir: /usr/app
+    command: yarn start
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "10m"
+        max-file: "5"             
