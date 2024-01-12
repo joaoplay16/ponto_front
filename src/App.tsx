@@ -1,7 +1,7 @@
 function App() {
   return (
     <div className="App">
-        <p>
+        <p className="bg-orange-500">
           Em ponto app
         </p>
     </div>
