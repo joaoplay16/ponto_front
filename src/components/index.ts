@@ -3,4 +3,5 @@ export { default as Sidebar } from "./Sidebar"
 export { SideBarItem } from "./Sidebar"
 export { SideBarItemDropdown } from "./Sidebar"
 export { default as SideBarForUser } from "./SidebarForUser"
+export { default as ScreenTitle } from "./ScreenTitle"
 
