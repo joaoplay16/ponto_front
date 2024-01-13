@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Header, SideBarForUser } from "./components"
+import { Outlet } from "react-router-dom"
 
 function App() {
   const [isMenuOpen, setMenuOpen] = useState(true)
@@ -19,6 +20,9 @@ function App() {
             setMenuOpen(!isMenuOpen)
           }}
         />
+        <div className="flex flex-col p-4 md:p-10">
+          <Outlet />
+        </div>
       </div>
     </div>
   )
