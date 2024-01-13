@@ -1,12 +1,44 @@
-import { HTMLProps } from "react"
+import { HTMLProps, ReactNode, MouseEvent, useState } from "react"
 
-export const SideBarItem = ({
-  title,
-  to: link
-}: {
+type SideBarItemProps = {
   title: string
   to: string
-}) => {
+}
+
+type SideBarItemDropdownProps = {
+  title: string
+  items: ReactNode[]
+}
+export const SideBarItemDropdown = ({
+  title,
+  items
+}: SideBarItemDropdownProps) => {
+  const [isExpanded, setExpanded] = useState(true)
+  const handleExpand = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setExpanded((prev) => !prev)
+  }
+
+  return (
+    <li className="flex flex-col ">
+      <button
+        onClick={handleExpand}
+        className="rounded px-2 py-1 text-left duration-100 hover:bg-slate-800/50 hover:text-orange-500 focus:bg-slate-400/50 focus:hover:text-inherit ">
+        {title}
+      </button>
+      <ul
+        className={`overflow-hidden pl-6 transition-all duration-300 ease-linear ${isExpanded ? "max-h-40" : "max-h-0"}`}>
+        {items.map((item, index) => (
+          <li key={index} className="text-md text-base">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </li>
+  )
+}
+
+export const SideBarItem = ({ title, to: link }: SideBarItemProps) => {
   return (
     <li className="block">
       <a
