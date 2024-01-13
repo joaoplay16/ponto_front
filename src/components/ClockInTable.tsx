@@ -110,7 +110,6 @@ export const ClockInTable = ({
 
   return (
     <DataTable
-      title="Users"
       columns={columns}
       data={data}
       progressPending={loading}
