@@ -1,4 +1,4 @@
-import { type Ponto } from "../types/index"
+import { Usuario, type Ponto } from "../types/index"
 import api from "./api"
 
 export interface PontosData {
@@ -14,6 +14,7 @@ export type ClockInReporParamns = {
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   doClockIn: (userId: number) => Promise<void>
+  login: (email: string, password: string) => Promise<Usuario>
 }
 
 export const apiService: ApiService = {
@@ -27,5 +28,13 @@ export const apiService: ApiService = {
   // http://localhost:8088/usuario/1/registrar_ponto
   doClockIn: async (userId: number) => {
     return await api.get(`/usuario/${userId}/registrar_ponto`)
+  },
+  login: async (email, password) => {
+    return (
+      await api.post<Usuario>(`/login`, {
+        email,
+        senha: password
+      })
+    ).data
   }
 }
