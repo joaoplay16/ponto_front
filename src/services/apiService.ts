@@ -1,4 +1,5 @@
 import { Usuario, type Ponto, WorkingHours } from "../types/index"
+import { WorkingHoursPerMonthCount } from "../types/workingHours"
 import api from "./api"
 
 export interface PontosData {
@@ -30,6 +31,11 @@ type ApiService = {
   userWorkingHoursReport: (
     params: WorkingHoursParamns
   ) => Promise<WorkingHoursData>
+  userWorkingHoursPerMonthReport: (
+    userId: number,
+    month: number,
+    year: number
+  ) => Promise<WorkingHoursPerMonthCount>
   doClockIn: (userId: number) => Promise<void>
   login: (email: string, password: string) => Promise<Usuario>
   logout: () => Promise<void>
@@ -55,6 +61,13 @@ export const apiService: ApiService = {
         `/usuario/${userId}/relatorio?mes=${mes}&ano=${ano}&limit=${limit}&offset=${offset}`
       )
     ).data
+  },
+  userWorkingHoursPerMonthReport: async (userId, month, year) => {
+    return await api
+      .get<WorkingHoursPerMonthCount>(
+        `/usuario/${userId}/relatorio_mensal?mes=${month}&ano=${year}`
+      )
+      .then((data) => data.data)
   },
   // http://localhost:8088/usuario/1/registrar_ponto
   doClockIn: async (userId: number) => {
