@@ -1,4 +1,4 @@
-import { Usuario, type Ponto } from "../types/index"
+import { Usuario, type Ponto, WorkingHours } from "../types/index"
 import api from "./api"
 
 export interface PontosData {
@@ -8,7 +8,7 @@ export interface PontosData {
 
 export interface WorkingHoursData {
   count: number
-  rows: WorkingHoursData[]
+  rows: WorkingHours[]
 }
 
 export type ClockInReporParamns = {
