@@ -11,4 +11,8 @@ type Usuario = {
     ativo: number,
 }
 
+export type UsuarioComSenha = Omit<Usuario, "criado_em"> & {
+    senha: string
+}
+
 export default Usuario
