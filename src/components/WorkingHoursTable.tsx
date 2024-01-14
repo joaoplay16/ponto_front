@@ -2,8 +2,11 @@ import { useState, useEffect } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
 import { WorkingHoursData, apiService } from "../services/apiService"
 import { getDayName, getMonth } from "../utils"
-import { type  WorkingHoursTableType } from "../types"
+import { type WorkingHoursTableType } from "../types"
 import Select from "./Select"
+import { error } from "console"
+import { AxiosError } from "axios"
+import { WorkingHoursPerMonthCount } from "../types/workingHours"
 
 const columns: TableColumn<WorkingHoursTableType>[] = [
   {
@@ -37,6 +40,9 @@ export const WorkingHoursTable = ({
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
+  const [totalWorkingHoursPerMonth, setTotalWorkingHoursPerMonth] = useState<
+    string | null
+  >(null)
 
   const fetchClockInData = async () => {
     setLoading(true)
@@ -104,8 +110,18 @@ export const WorkingHoursTable = ({
 
   useEffect(() => {
     fetchClockInData()
-    console.log("SEL ", selectedYear);
   }, [currentPage, perPage, selectedYear, selectedMonth])
+
+  useEffect(() => {
+    apiService
+      .userWorkingHoursPerMonthReport(userId, selectedMonth, selectedYear)
+      .then((data: WorkingHoursPerMonthCount) => {
+        setTotalWorkingHoursPerMonth(data.horas_trabalhadas)
+      })
+      .catch((error: AxiosError) => {
+        console.log("Errro ao buscar horas trabalhadas totais", error)
+      })
+  }, [selectedYear, selectedMonth])
 
   const paginationComponentOptions = {
     rowsPerPageText: "Linhas por página",
@@ -115,7 +131,7 @@ export const WorkingHoursTable = ({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <DataTable
         columns={columns}
         data={data}
@@ -130,13 +146,19 @@ export const WorkingHoursTable = ({
         paginationPerPage={defaultPerPage}
         noDataComponent="Nenhum registro de horas trabalhadas encontrado"
       />
-      <div className="flex justify-end gap-2">
+      {totalRows > 0 && (
+        <div className="mb-2 self-end rounded-full bg-slate-600 px-6 py-1 text-[16px] text-gray-200">
+          <span> Total de horas trabalhadas {totalWorkingHoursPerMonth}</span>
+        </div>
+      )}
+
+      <div className="flex flex-grow-0 justify-end gap-2">
         <Select
           title={"Mês"}
           values={Array.from({ length: 12 }, (_, index) => index + 1)}
           defaultValue={selectedMonth}
           onSelect={function (selected): void {
-              setSelectedMonth(selected as number)
+            setSelectedMonth(selected as number)
           }}
           transformValue={function (value: string | number): string | number {
             if (typeof value == "number") {
@@ -150,7 +172,7 @@ export const WorkingHoursTable = ({
           values={Array.from({ length: 14 }, (_, index) => 2024 - index)}
           defaultValue={selectedYear}
           onSelect={function (selected: string | number): void {
-              setSelectedYear(selected as number)
+            setSelectedYear(selected as number)
           }}
         />
       </div>
