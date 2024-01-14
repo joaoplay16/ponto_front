@@ -15,7 +15,7 @@ function App() {
         />
         <div className="h-full w-full">
           <Header
-            className="sticky top-0 bg-gray-700 md:flex-grow"
+            className="sticky top-0 bg-gray-700 md:flex-grow z-10"
             isMenuOpen={isMenuOpen}
             openMenu={() => {
               setMenuOpen(!isMenuOpen)
