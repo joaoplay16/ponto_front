@@ -1,4 +1,5 @@
 import { HTMLProps, ReactNode, MouseEvent, useState } from "react"
+import { Link } from "react-router-dom"
 
 type SideBarItemProps = {
   title: string
@@ -41,11 +42,11 @@ export const SideBarItemDropdown = ({
 export const SideBarItem = ({ title, to: link }: SideBarItemProps) => {
   return (
     <li className="block">
-      <a
-        href={link}
+      <Link
+        to={link}
         className="block rounded px-2 py-1 duration-100 hover:bg-slate-800/50 hover:text-orange-500 focus:bg-slate-400/50 focus:hover:text-inherit ">
         {title}
-      </a>
+      </Link>
     </li>
   )
 }
