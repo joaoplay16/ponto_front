@@ -6,6 +6,7 @@ import { lazy, Suspense } from "react"
 const Dashboard = lazy(() => import("./pages/user/Dashboard"))
 const ClockInReport = lazy(() => import("./pages/user/ClockInReport"))
 const WorkingHoursReport = lazy(() => import("./pages/user/WorkingHoursReport"))
+const Profile = lazy(() => import("./pages/user/Profile"))
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Carregando</div>}>
             <ClockInReport />
+          </Suspense>
+        )
+      },
+      {
+        path: navRoutes.user.profile,
+        element: (
+          <Suspense fallback={<div>Carregando</div>}>
+            <Profile />
           </Suspense>
         )
       }
