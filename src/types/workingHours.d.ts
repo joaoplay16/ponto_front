@@ -10,4 +10,10 @@ export type WorkingHoursTableType = {
     horas_trabalhadas: string
 }
 
+export type WorkingHoursPerMonthCount = {
+    usuario_id: number,
+    mes: number
+    horas_trabalhadas: string
+}
+
 export default WorkingHours
