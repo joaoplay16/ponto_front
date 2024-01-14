@@ -6,15 +6,32 @@ export interface PontosData {
   rows: Ponto[]
 }
 
+export interface WorkingHoursData {
+  count: number
+  rows: WorkingHoursData[]
+}
+
 export type ClockInReporParamns = {
   userId: number
   limit?: number
   offset?: number
 }
+
+export type WorkingHoursParamns = {
+  userId: number
+  mes: number
+  ano: number
+  limit?: number
+  offset?: number
+}
+
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
+  userWorkingHoursReport: (
+    params: WorkingHoursParamns
+  ) => Promise<WorkingHoursData>
   doClockIn: (userId: number) => Promise<void>
-  login: (email: string, password: string) => Promise<Usuario>,
+  login: (email: string, password: string) => Promise<Usuario>
   logout: () => Promise<void>
 }
 
@@ -23,6 +40,19 @@ export const apiService: ApiService = {
     return (
       await api.get<PontosData>(
         `/usuario/${userId}/pontos?limit=${limit}&offset=${offset}`
+      )
+    ).data
+  },
+  userWorkingHoursReport: async ({
+    userId,
+    mes,
+    ano,
+    limit = 10,
+    offset = 0
+  }) => {
+    return (
+      await api.get<WorkingHoursData>(
+        `/usuario/${userId}/relatorio?mes=${mes}&ano=${ano}&limit=${limit}&offset=${offset}`
       )
     ).data
   },
@@ -39,8 +69,6 @@ export const apiService: ApiService = {
     ).data
   },
   logout: async () => {
-    return (
-      await api.get(`/logout`)
-    )
+    return await api.get(`/logout`)
   }
 }
