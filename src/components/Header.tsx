@@ -1,4 +1,5 @@
 import { HTMLProps, MouseEvent, ReactNode, useState } from "react"
+import { useAuth } from "../contexts"
 
 interface HeaderProp extends HTMLProps<HTMLElement> {
   isMenuOpen: boolean
@@ -64,6 +65,8 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
     setProfileDropdownOpen((prev) => !prev)
   }
 
+  const { userInfo, logout } = useAuth()
+
   return (
     <>
       <nav className="bg-gray-800" {...props}>
@@ -126,7 +129,9 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
                 alt=""
               />
 
-              <span className="font-medium text-slate-300"> João </span>
+              <span className="font-medium text-slate-300"> 
+                {userInfo.user?.nome} 
+              </span>
             </button>
 
             <div
@@ -147,6 +152,7 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
                 Perfil
               </a>
               <a
+              onClick={logout}
                 href="#"
                 className="block px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
