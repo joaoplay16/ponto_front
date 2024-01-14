@@ -14,7 +14,8 @@ export type ClockInReporParamns = {
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   doClockIn: (userId: number) => Promise<void>
-  login: (email: string, password: string) => Promise<Usuario>
+  login: (email: string, password: string) => Promise<Usuario>,
+  logout: () => Promise<void>
 }
 
 export const apiService: ApiService = {
@@ -36,5 +37,10 @@ export const apiService: ApiService = {
         senha: password
       })
     ).data
+  },
+  logout: async () => {
+    return (
+      await api.get(`/logout`)
+    )
   }
 }
