@@ -11,6 +11,11 @@ const SidebarForUser = (props: HTMLProps<HTMLElement>) => {
         title="Relatórios"
         items={[
           <Link
+          className="block rounded px-2 py-0 hover:bg-slate-600/50 hover:text-orange-400 "
+          to={navigationRoutes.user.report.clockIn}>
+          Ponto
+        </Link>,
+          <Link
             className="block rounded px-2 py-0 hover:bg-slate-600/50 hover:text-orange-400 "
             to={navigationRoutes.user.report.wourkingHours}>
             Horas trabalhadas
