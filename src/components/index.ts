@@ -8,4 +8,5 @@ export { default as DoClockIn } from "./DoClockIn"
 export { default as DashboarItem } from "./DashboarItem"
 export { default as  CardInfo} from "./CardInfo"
 export { default as  Select} from "./Select"
+export { default as  WorkingHoursTable} from "./WorkingHoursTable"
 
