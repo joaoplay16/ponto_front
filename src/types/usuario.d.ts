@@ -12,7 +12,7 @@ type Usuario = {
 }
 
 export type UsuarioComSenha = Omit<Usuario, "criado_em"> & {
-    senha: string
+    senha?: string
 }
 
 export default Usuario
