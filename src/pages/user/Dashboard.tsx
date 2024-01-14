@@ -1,14 +1,9 @@
-import { useEffect } from "react"
 import { DashboarItem, DoClockIn, ScreenTitle } from "../../components"
-import { apiService } from "../../services/apiService"
 import ClockInTable from "../../components/ClockInTable"
+import { useAuth } from "../../contexts"
 
 const Dashboard = () => {
-  useEffect(() => {
-    apiService.userClockInReport({ userId: 1 }).then((data) => {
-      console.log("PONTO", data.rows)
-    })
-  }, [])
+  const { userInfo } = useAuth()
 
   return (
     <>
@@ -41,11 +36,14 @@ const Dashboard = () => {
 
       <ScreenTitle title="Ponto" />
       <hr className="mb-2 border-t-2 pb-4" />
-
       <div className="flex flex-col gap-4 md:gap-10 lg:flex lg:flex-row">
-        <DoClockIn />
+        <DoClockIn userId={userInfo.user?.id || 0}/>
         <div className="">
-          <ClockInTable userId={1} defaultPerPage={4} pagination={false} />
+          <ClockInTable
+            userId={userInfo.user?.id || 0}
+            defaultPerPage={4}
+            pagination={false}
+          />
         </div>
       </div>
     </>
