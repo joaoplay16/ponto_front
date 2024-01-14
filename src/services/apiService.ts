@@ -1,4 +1,4 @@
-import { Usuario, type Ponto, WorkingHours } from "../types/index"
+import { Usuario, type Ponto, WorkingHours, UsuarioComSenha } from "../types/index"
 import { WorkingHoursPerMonthCount } from "../types/workingHours"
 import api from "./api"
 
@@ -38,7 +38,8 @@ type ApiService = {
   ) => Promise<WorkingHoursPerMonthCount>
   doClockIn: (userId: number) => Promise<void>
   login: (email: string, password: string) => Promise<Usuario>
-  logout: () => Promise<void>
+  logout: () => Promise<void>,
+  updateUser: (user: UsuarioComSenha) => Promise<[number]>
 }
 
 export const apiService: ApiService = {
@@ -83,5 +84,8 @@ export const apiService: ApiService = {
   },
   logout: async () => {
     return await api.get(`/logout`)
+  },
+  updateUser: async (user: UsuarioComSenha) => {
+    return (await api.post<[number]>(`/usuario/${user.id}/atualizar`, user)).data
   }
 }
