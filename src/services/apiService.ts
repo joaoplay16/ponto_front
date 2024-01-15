@@ -52,6 +52,14 @@ export type AllUsersWorkingHoursParamns = {
   offset?: number
 }
 
+export type UserRegisterParamns = {
+  nome: string
+  nome_de_usuario: string
+  email: string
+  celular: string
+  e_admin: boolean
+}
+
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   userWorkingHoursReport: (
@@ -66,6 +74,7 @@ type ApiService = {
   login: (email: string, password: string) => Promise<Usuario>
   logout: () => Promise<void>
   updateUser: (user: UsuarioComSenha) => Promise<[number]>
+  registerUser: (params: UserRegisterParamns) => Promise<Usuario>
   allUsersReport: (
     cargo: string,
     limit?: number,
@@ -142,5 +151,9 @@ export const apiService: ApiService = {
         `/admin/ponto/relatorio?cargo=${cargo}&mes=${mes}&ano=${ano}&limit=${limit}&offset=${offset}`
       )
     ).data
-  }
+  },
+  registerUser: async (paramns: UserRegisterParamns) => {
+    return (await api.post<Usuario>(`/usuario/criar`, paramns))
+      .data
+  },
 }
