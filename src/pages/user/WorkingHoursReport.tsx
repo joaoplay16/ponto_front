@@ -1,6 +1,10 @@
 import { CardInfo, ScreenTitle, WorkingHoursTable } from "../../components"
+import { useAuth } from "../../contexts"
 
 const WorkingHoursReport = () => {
+
+  const {userInfo} = useAuth()
+
   return (
     <div>
       <ScreenTitle title="Relatório de horas trabalhadas" />
@@ -11,7 +15,7 @@ const WorkingHoursReport = () => {
       </h5>
       <div className="flex flex-wrap gap-4 md:gap-16">
         <div className="">
-          <WorkingHoursTable defaultPerPage={12} pagination userId={1} />
+          <WorkingHoursTable defaultPerPage={12} pagination userId={userInfo.user?.id || 0} />
         </div>
         <CardInfo />
       </div>
