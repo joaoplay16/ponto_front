@@ -3,6 +3,7 @@ import DataTable, { TableColumn } from "react-data-table-component"
 import { UsuariosData, apiService } from "../services/apiService"
 import Select from "./Select"
 import { Usuario } from "../types"
+import { Link } from "react-router-dom"
 
 const columns: TableColumn<Usuario>[] = [
   {
@@ -17,7 +18,14 @@ const columns: TableColumn<Usuario>[] = [
   {
     name: "Nome",
     selector: (row) => row.nome_de_usuario,
-    sortable: true
+    sortable: true,
+    cell: (row, rowIndex, column, id) => {
+        return(
+          <Link className="hover:text-orange-700" to={`/admin/usuario/${row.id}/perfil`}>
+            {row.nome}
+          </Link>
+        )
+    }
   },
   {
     name: "Nome de usuário",
