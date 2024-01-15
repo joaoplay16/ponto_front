@@ -27,6 +27,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
         isUserLoggedIn: true,
         user: user
       })
+      localStorage.setItem("isLoggedIn", "true")
+      localStorage.setItem("isAdmin",( user.e_admin == 1).toString())
       return user
     })
   }
@@ -37,6 +39,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
       isUserLoggedIn: true,
       user: null
     })
+    localStorage.setItem("isLoggedIn", "false")
+      localStorage.setItem("isAdmin", "false")
   }
 
   return (

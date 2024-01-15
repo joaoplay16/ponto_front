@@ -6,11 +6,14 @@ import { AuthRoutes } from "./AuhtRoutes"
 const Root = () => {
   const { userInfo } = useAuth()
 
-  if (userInfo.user == null) {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") 
+  const isAdmin = localStorage.getItem("isAdmin") 
+
+  if (isLoggedIn == "false") {
     return <AuthRoutes />
   }
 
-  if (userInfo.user.e_admin) {
+  if ( ( isAdmin == "true")) {
     return <AdminRoutes />
   } else {
     return <Routes />

@@ -13,7 +13,9 @@ function App() {
 
   const { userInfo } = useAuth()
 
-  const isAdmin = userInfo.user?.e_admin == 1
+  // const isAdmin = userInfo.user?.e_admin == 1
+
+  const isAdmin = localStorage.getItem("isAdmin") 
 
   return (
     <div className="flex h-screen flex-col">
