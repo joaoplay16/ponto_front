@@ -83,6 +83,7 @@ type ApiService = {
   allUsersWorkingHoursReport: (
     params: AllUsersWorkingHoursParamns
   ) => Promise<AllUsersWorkingHoursData>
+  getUser: (id:number) => Promise<Usuario>
 }
 
 export const apiService: ApiService = {
@@ -154,6 +155,10 @@ export const apiService: ApiService = {
   },
   registerUser: async (paramns: UserRegisterParamns) => {
     return (await api.post<Usuario>(`/usuario/criar`, paramns))
+      .data
+  },
+  getUser: async (id) => {
+    return (await api.get<Usuario>(`/usuario/${id}`))
       .data
   },
 }
