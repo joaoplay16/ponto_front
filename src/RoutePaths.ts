@@ -31,6 +31,7 @@ export const navigationRoutes = {
     calendar: `/${ADMIN}/${CALENDAR}`,
     requests: `/${ADMIN}/${RESQUESTS}`,
     settings: `/${ADMIN}/${SETTINGS}`,
-    register_user: `/${ADMIN}/${USER}/${REGISTER}`
+    register_user: `/${ADMIN}/${USER}/${REGISTER}`,
+    user_profile: `/${ADMIN}/${USER}/:id/${PROFILE}`
   }
 }
