@@ -1,3 +1,4 @@
 export { default as Login } from "./Login"
 export { default as Register } from "./Register"
 export { default as RegisterContinue } from "./RegisterContinue"
+export { default as PasswordReset } from "./PasswordReset"

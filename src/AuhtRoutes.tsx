@@ -5,6 +5,7 @@ import { lazy } from "react"
 
 const Register = lazy(() => import("./pages/common/Register"))
 const RegisterContinue = lazy(() => import("./pages/common/RegisterContinue"))
+const PasswordReset = lazy(() => import("./pages/common/PasswordReset"))
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,10 @@ const router = createBrowserRouter([
     path: navigationRoutes.continueRegister,
     element: <RegisterContinue />
   },
-  {}
+  {
+    path: navigationRoutes.changePassword,
+    element: <PasswordReset />
+  },
 ])
 
 export function AuthRoutes() {
