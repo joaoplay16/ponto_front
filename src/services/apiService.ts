@@ -1,4 +1,9 @@
-import { Usuario, type Ponto, WorkingHours, UsuarioComSenha } from "../types/index"
+import {
+  Usuario,
+  type Ponto,
+  WorkingHours,
+  UsuarioComSenha
+} from "../types/index"
 import { WorkingHoursPerMonthCount } from "../types/workingHours"
 import api from "./api"
 
@@ -26,6 +31,11 @@ export type WorkingHoursParamns = {
   offset?: number
 }
 
+export interface UsuariosData {
+  count: number
+  rows: Usuario[]
+}
+
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   userWorkingHoursReport: (
@@ -38,8 +48,13 @@ type ApiService = {
   ) => Promise<WorkingHoursPerMonthCount>
   doClockIn: (userId: number) => Promise<void>
   login: (email: string, password: string) => Promise<Usuario>
-  logout: () => Promise<void>,
+  logout: () => Promise<void>
   updateUser: (user: UsuarioComSenha) => Promise<[number]>
+  allUsersReport: (
+    cargo: string,
+    limit?: number,
+    offset?: number
+  ) => Promise<UsuariosData>
 }
 
 export const apiService: ApiService = {
@@ -86,6 +101,14 @@ export const apiService: ApiService = {
     return await api.get(`/logout`)
   },
   updateUser: async (user: UsuarioComSenha) => {
-    return (await api.post<[number]>(`/usuario/${user.id}/atualizar`, user)).data
+    return (await api.post<[number]>(`/usuario/${user.id}/atualizar`, user))
+      .data
+  },
+  allUsersReport: async (cargo, limit = 10, offset=0) => {
+    return (
+      await api.get<UsuariosData>(
+        `/admin/usuarios?cargo=${cargo}&limit=${limit}&offset=${offset}`
+      )
+    ).data
   }
 }
