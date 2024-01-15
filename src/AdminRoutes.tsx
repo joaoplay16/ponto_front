@@ -8,6 +8,7 @@ const WorkingHoursReport = lazy(() => import("./pages/admin/WorkingHoursReport")
 const UsersReport = lazy(() => import("./pages/admin/UsersReport"))
 const UserRegister = lazy(() => import("./pages/admin/UserRegister"))
 const UserProfile = lazy(() => import("./pages/admin/UserProfile"))
+const Login = lazy(() => import("./pages/common/Login"))
 
 const router = createBrowserRouter([
   {
@@ -63,7 +64,15 @@ const router = createBrowserRouter([
         )
       },
     ]
-  }
+  },
+  {
+    path: navRoutes.login,
+    element: (
+      <Suspense fallback={<div>Carregando</div>}>
+        <Login />
+      </Suspense>
+    )
+  },
 ])
 
 export function AdminRoutes() {
