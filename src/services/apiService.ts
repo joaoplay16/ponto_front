@@ -4,7 +4,10 @@ import {
   WorkingHours,
   UsuarioComSenha
 } from "../types/index"
-import { WorkingHoursPerMonthCount } from "../types/workingHours"
+import {
+  WorkingHoursPerMonthCount,
+  WorkingHoursWithUser
+} from "../types/workingHours"
 import api from "./api"
 
 export interface PontosData {
@@ -36,6 +39,19 @@ export interface UsuariosData {
   rows: Usuario[]
 }
 
+export interface AllUsersWorkingHoursData {
+  count: number
+  rows: WorkingHoursWithUser[]
+}
+
+export type AllUsersWorkingHoursParamns = {
+  cargo?: string
+  mes?: number | string
+  ano?: number | string
+  limit?: number
+  offset?: number
+}
+
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   userWorkingHoursReport: (
@@ -55,6 +71,9 @@ type ApiService = {
     limit?: number,
     offset?: number
   ) => Promise<UsuariosData>
+  allUsersWorkingHoursReport: (
+    params: AllUsersWorkingHoursParamns
+  ) => Promise<AllUsersWorkingHoursData>
 }
 
 export const apiService: ApiService = {
@@ -108,6 +127,19 @@ export const apiService: ApiService = {
     return (
       await api.get<UsuariosData>(
         `/admin/usuarios?cargo=${cargo}&limit=${limit}&offset=${offset}`
+      )
+    ).data
+  },
+  allUsersWorkingHoursReport: async function ({
+    cargo= "",
+    mes = "",
+    ano = "",
+    limit = 10,
+    offset = 0
+  }: AllUsersWorkingHoursParamns): Promise<AllUsersWorkingHoursData> {
+    return (
+      await api.get<AllUsersWorkingHoursData>(
+        `/admin/ponto/relatorio?cargo=${cargo}&mes=${mes}&ano=${ano}&limit=${limit}&offset=${offset}`
       )
     ).data
   }
