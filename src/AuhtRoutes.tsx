@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Login } from "./pages/common"
 import { navigationRoutes } from "./RoutePaths"
-import { lazy } from "react"
+import { lazy, Suspense } from "react"
 
 const Register = lazy(() => import("./pages/common/Register"))
 const RegisterContinue = lazy(() => import("./pages/common/RegisterContinue"))
@@ -22,8 +22,8 @@ const router = createBrowserRouter([
     element: <RegisterContinue />
   },
   {
-    path: navigationRoutes.changePassword,
-    element: <PasswordReset />
+    path: navigationRoutes.forgotPassword,
+    element: <Suspense><PasswordReset /></Suspense>
   },
 ])
 
