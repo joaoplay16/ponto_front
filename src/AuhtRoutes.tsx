@@ -6,6 +6,7 @@ import { lazy, Suspense } from "react"
 const Register = lazy(() => import("./pages/common/Register"))
 const RegisterContinue = lazy(() => import("./pages/common/RegisterContinue"))
 const PasswordReset = lazy(() => import("./pages/common/PasswordReset"))
+const CreatePassword = lazy(() => import("./pages/common/CreatePassword"))
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,14 @@ const router = createBrowserRouter([
     element: (
       <Suspense>
         <PasswordReset />
+      </Suspense>
+    )
+  },
+  {
+    path: navigationRoutes.changePassword,
+    element: (
+      <Suspense>
+        <CreatePassword />
       </Suspense>
     )
   }
