@@ -1,3 +1,5 @@
+import Usuario from "./usuario"
+
 type WorkingHours = {
     data: string,
     dia_da_semana: number,
@@ -15,5 +17,7 @@ export type WorkingHoursPerMonthCount = {
     mes: number
     horas_trabalhadas: string
 }
+
+export type WorkingHoursWithUser = WorkingHours & Usuario
 
 export default WorkingHours
