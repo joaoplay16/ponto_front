@@ -142,14 +142,14 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
               aria-orientation="vertical"
               aria-labelledby="user-menu-button"
               tabIndex={-1}>
-              <a
-                href="#"
+              <Link
+                to="/perfil"
                 className="block px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
                 tabIndex={-1}
                 id="user-menu-item-0">
                 Perfil
-              </a>
+              </Link>
               <a
               onClick={logout}
                 href="#"
