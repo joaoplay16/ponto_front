@@ -8,7 +8,7 @@ interface UserInfo {
 }
 
 export interface AuthContextProps {
-  login: (email: string, password: string) => void
+  login: (email: string, password: string) => Promise<Usuario>
   logout: () => void
   userInfo: UserInfo
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>
@@ -22,10 +22,12 @@ function AuthProvider({ children }: { children: ReactNode }) {
     user: null
   })
   const login = async (email: string, password: string) => {
-    const user = await apiService.login(email, password)
-    setUserInfo({
-      isUserLoggedIn: true,
-      user: user
+    return apiService.login(email, password).then((user) => {
+      setUserInfo({
+        isUserLoggedIn: true,
+        user: user
+      })
+      return user
     })
   }
 
