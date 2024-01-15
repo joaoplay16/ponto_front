@@ -9,6 +9,8 @@ export const SETTINGS = "configuracoes"
 export const ADMIN = "admin"
 export const CLOCK_IN = "ponto"
 export const USERS = "usuarios"
+export const USER = "usuario"
+export const REGISTER = "cadastro"
 
 export const navigationRoutes = {
   login: `/${LOGIN}`,
@@ -28,6 +30,7 @@ export const navigationRoutes = {
     report: { wourkingHours: `/${ADMIN}/${REPORT}/${WORKING_HOURS}`, users: `/${ADMIN}/${REPORT}/${USERS}` },
     calendar: `/${ADMIN}/${CALENDAR}`,
     requests: `/${ADMIN}/${RESQUESTS}`,
-    settings: `/${ADMIN}/${SETTINGS}`
+    settings: `/${ADMIN}/${SETTINGS}`,
+    register_user: `/${ADMIN}/${USER}/${REGISTER}`
   }
 }
