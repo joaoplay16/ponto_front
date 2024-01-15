@@ -6,6 +6,7 @@ import { lazy, Suspense } from "react"
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"))
 const WorkingHoursReport = lazy(() => import("./pages/admin/WorkingHoursReport"))
 const UsersReport = lazy(() => import("./pages/admin/UsersReport"))
+const UserRegister = lazy(() => import("./pages/admin/UserRegister"))
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Carregando</div>}>
             <UsersReport />
+          </Suspense>
+        )
+      },
+      {
+        path: navRoutes.admin.register_user,
+        element: (
+          <Suspense fallback={<div>Carregando</div>}>
+            <UserRegister />
           </Suspense>
         )
       },
