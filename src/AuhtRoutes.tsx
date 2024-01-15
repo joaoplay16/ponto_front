@@ -15,16 +15,28 @@ const router = createBrowserRouter([
   },
   {
     path: navigationRoutes.register,
-    element: <Register />
+    element: (
+      <Suspense>
+        <Register />
+      </Suspense>
+    )
   },
   {
     path: navigationRoutes.continueRegister,
-    element: <RegisterContinue />
+    element: (
+      <Suspense>
+        <RegisterContinue />
+      </Suspense>
+    )
   },
   {
     path: navigationRoutes.forgotPassword,
-    element: <Suspense><PasswordReset /></Suspense>
-  },
+    element: (
+      <Suspense>
+        <PasswordReset />
+      </Suspense>
+    )
+  }
 ])
 
 export function AuthRoutes() {
