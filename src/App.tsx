@@ -20,14 +20,14 @@ function App() {
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 ">
-        {!isAdmin && (
+        {(isAdmin == "false") && (
           <SideBarForUser
             className={`w-0  bg-gray-700 ${
               isMenuOpen ? "md:w-52" : "md:w-0"
             } sticky top-0 h-screen flex-shrink-0 duration-200`}
           />
         )}
-        {isAdmin && (
+        {(isAdmin == "true") && (
           <SidebarForAdmin
             className={`w-0  bg-gray-700 ${
               isMenuOpen ? "md:w-52" : "md:w-0"
@@ -35,7 +35,7 @@ function App() {
           />
         )}
         <div className="h-full w-full">
-          {!isAdmin && (
+          {(isAdmin == "false") && (
             <Header
               className="sticky top-0 z-10 bg-gray-700 md:flex-grow"
               isMenuOpen={isMenuOpen}
@@ -44,7 +44,7 @@ function App() {
               }}
             />
           )}
-          {isAdmin && (
+          {(isAdmin == "true") && (
             <HeaderForAdmin
               className="sticky top-0 z-10 bg-gray-700 md:flex-grow"
               isMenuOpen={isMenuOpen}
