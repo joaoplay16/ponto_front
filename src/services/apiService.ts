@@ -65,6 +65,11 @@ export type FinishUserRegisterParamns = {
   senha: string
 }
 
+export type FinishUserPasswordChangeParamns = {
+  token: string
+  senha: string
+}
+
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   userWorkingHoursReport: (
@@ -90,6 +95,8 @@ type ApiService = {
   ) => Promise<AllUsersWorkingHoursData>
   getUser: (id:number) => Promise<Usuario>
   finishUserRegister: (params: FinishUserRegisterParamns) => Promise<[number]>
+  requestPasswordChange: (username: string) => Promise<void>
+  finishUserPasswordChange: (params: FinishUserPasswordChangeParamns) => Promise<[number]>
 }
 
 export const apiService: ApiService = {
@@ -169,6 +176,13 @@ export const apiService: ApiService = {
   },
   finishUserRegister: async (paramns: FinishUserRegisterParamns) => {
     return (await api.post<[number]>(`/usuario/registro`, paramns))
+      .data
+  },
+  requestPasswordChange: async (username) => {
+    return await api.get(`/usuario/redefinir_senha?usuario=${username}`)
+  },
+  finishUserPasswordChange: async (params: FinishUserPasswordChangeParamns) => {
+    return (await api.post<[number]>(`/usuario/nova_senha`, params))
       .data
   },
 }
