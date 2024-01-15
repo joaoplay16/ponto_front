@@ -13,4 +13,5 @@ export { default as  Button} from "./Button"
 export { default as  ValidationError} from "./ValidationError"
 export { default as  CardConquistas} from "./CardConquistas"
 export { default as  AllUsersWorkingHoursTable} from "./AllUsersWorkingHoursTable"
+export { default as  AllUsersTable} from "./AllUsersTable"
 
