@@ -11,10 +11,17 @@ export const CLOCK_IN = "ponto"
 export const USERS = "usuarios"
 export const USER = "usuario"
 export const REGISTER = "cadastro"
+export const FORGOT_PASSWORD = "esqueci_minha_senha"
+export const CHANGE_PASSWORD = "mudar_senha"
+export const CONTINUE_REGISTER = "continuar_cadastro"
 
 export const navigationRoutes = {
   login: `/${LOGIN}`,
   logout: `/${LOGOUT}`,
+  register: `/${REGISTER}`,
+  forgotPassword: `/${FORGOT_PASSWORD}`,
+  changePassword: `/${CHANGE_PASSWORD}`,
+  continueRegister: `/${CONTINUE_REGISTER}`,
   user: {
     profile: `/${PROFILE}`,
     report: {
