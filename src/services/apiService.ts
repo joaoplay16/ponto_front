@@ -60,6 +60,11 @@ export type UserRegisterParamns = {
   e_admin: boolean
 }
 
+export type FinishUserRegisterParamns = {
+  usuario: string
+  senha: string
+}
+
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   userWorkingHoursReport: (
@@ -84,6 +89,7 @@ type ApiService = {
     params: AllUsersWorkingHoursParamns
   ) => Promise<AllUsersWorkingHoursData>
   getUser: (id:number) => Promise<Usuario>
+  finishUserRegister: (params: FinishUserRegisterParamns) => Promise<[number]>
 }
 
 export const apiService: ApiService = {
@@ -159,6 +165,10 @@ export const apiService: ApiService = {
   },
   getUser: async (id) => {
     return (await api.get<Usuario>(`/usuario/${id}`))
+      .data
+  },
+  finishUserRegister: async (paramns: FinishUserRegisterParamns) => {
+    return (await api.post<[number]>(`/usuario/registro`, paramns))
       .data
   },
 }
