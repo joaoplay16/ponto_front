@@ -29,9 +29,9 @@ const columns: TableColumn<Usuario>[] = [
     selector: (row) => row.celular
   },
   {
-    name: "Horas trabalhadas",
+    name: "Ativo",
     selector: (row) => row.ativo,
-    sortable: true
+    sortable: true,
   }
 ]
 
