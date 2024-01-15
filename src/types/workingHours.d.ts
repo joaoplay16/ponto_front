@@ -22,5 +22,10 @@ export type WorkingHoursWithUser = WorkingHours & {
     usuario: Usuario
 }
 
+export type WorkingHoursWithUserTableType = WorkingHoursWithUser & {
+    dia_da_semana: string,
+}
+
+
 
 export default WorkingHours
