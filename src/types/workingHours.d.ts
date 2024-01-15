@@ -18,6 +18,9 @@ export type WorkingHoursPerMonthCount = {
     horas_trabalhadas: string
 }
 
-export type WorkingHoursWithUser = WorkingHours & Usuario
+export type WorkingHoursWithUser = WorkingHours & {
+    usuario: Usuario
+}
+
 
 export default WorkingHours
