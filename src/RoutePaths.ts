@@ -8,6 +8,7 @@ export const RESQUESTS = "solicitacoes"
 export const SETTINGS = "configuracoes"
 export const ADMIN = "admin"
 export const CLOCK_IN = "ponto"
+export const USERS = "usuarios"
 
 export const navigationRoutes = {
   login: `/${LOGIN}`,
@@ -24,7 +25,7 @@ export const navigationRoutes = {
   },
   admin: {
     profile: `/${ADMIN}/${PROFILE}`,
-    report: { wourkingHours: `/${ADMIN}/${REPORT}/${WORKING_HOURS}` },
+    report: { wourkingHours: `/${ADMIN}/${REPORT}/${WORKING_HOURS}`, users: `/${ADMIN}/${REPORT}/${USERS}` },
     calendar: `/${ADMIN}/${CALENDAR}`,
     requests: `/${ADMIN}/${RESQUESTS}`,
     settings: `/${ADMIN}/${SETTINGS}`
