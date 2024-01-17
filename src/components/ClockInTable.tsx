@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
-import { PontosData, apiService } from "../services/apiService"
+import { apiService } from "../services/apiService"
 import { PontoTable } from "../types/ponto"
 import { getDayName } from "../utils"
+import { AxiosError } from "axios"
+import { ErrorResponse } from "react-router-dom"
 
 const columns: TableColumn<PontoTable>[] = [
   {
@@ -27,7 +29,7 @@ const columns: TableColumn<PontoTable>[] = [
 export const ClockInTable = ({
   userId,
   defaultPerPage,
-  pagination
+  pagination,
 }: {
   userId: number
   defaultPerPage: number
@@ -39,6 +41,7 @@ export const ClockInTable = ({
   const [perPage, setPerPage] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
 
+
   const fetchClockInData = async () => {
     setLoading(true)
 
@@ -46,23 +49,28 @@ export const ClockInTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular perPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * perPage registros para chegar à terceira página, e assim por diante.
 
-    const pontosData: PontosData = await apiService.userClockInReport({
-      userId: userId,
-      limit: perPage,
-      offset: (currentPage - 1) * perPage
-    })
+    apiService
+      .userClockInReport({
+        userId: userId,
+        limit: perPage,
+        offset: (currentPage - 1) * perPage
+      })
+      .then((pontosData) => {
+        const data: PontoTable[] = pontosData.rows.map(
+          (item) =>
+            ({
+              ...item,
+              dia_da_semana: getDayName(item.dia_da_semana)
+            }) as PontoTable
+        )
 
-    const data: PontoTable[] = pontosData.rows.map(
-      (item) =>
-        ({
-          ...item,
-          dia_da_semana: getDayName(item.dia_da_semana)
-        }) as PontoTable
-    )
-
-    setData(data)
-    setTotalRows(pontosData.count)
-    setLoading(false)
+        setData(data)
+        setTotalRows(pontosData.count)
+        setLoading(false)
+      })
+      .catch((error: AxiosError<ErrorResponse>) => {
+        console.log("Erro ao buscar registro de pontos", error)
+      })
   }
 
   const handlePageChange = (page: number) => {
@@ -77,29 +85,38 @@ export const ClockInTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular newPerPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * newPerPage registros para chegar à terceira página, e assim por diante.
 
-    const pontosData: PontosData = await apiService.userClockInReport({
-      userId: userId,
-      limit: newPerPage,
-      offset: (page - 1) * newPerPage
-    })
+    apiService
+      .userClockInReport({
+        userId: userId,
+        limit: newPerPage,
+        offset: (page - 1) * newPerPage
+      })
+      .then((pontosData) => {
+        const data: PontoTable[] = pontosData.rows.map(
+          (item) =>
+            ({
+              ...item,
+              dia_da_semana: getDayName(item.dia_da_semana)
+            }) as PontoTable
+        )
 
-    const data: PontoTable[] = pontosData.rows.map(
-      (item) =>
-        ({
-          ...item,
-          dia_da_semana: getDayName(item.dia_da_semana)
-        }) as PontoTable
-    )
+        setData(data)
+        setLoading(false)
+      })
+      .catch((error: AxiosError) => {
+        console.log("Erro ao buscar registro de pontos", error)
+        if(error.status == 403){
+          apiService.logout()
+        }
+      })
 
-    setData(data)
     setPerPage(newPerPage)
     setCurrentPage(page)
-    setLoading(false)
   }
 
   useEffect(() => {
     fetchClockInData()
-  }, [currentPage, perPage])
+  }, [currentPage, perPage, loadTrigger])
 
   const paginationComponentOptions = {
     rowsPerPageText: "Linhas por página",
