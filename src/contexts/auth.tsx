@@ -1,9 +1,15 @@
-import React, { ReactNode, createContext, useContext, useState } from "react"
-import { Usuario } from "../types"
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState
+} from "react"
 import { apiService } from "../services/apiService"
+import { Usuario } from "../types"
+import { LoginInfo, getStoredLoginInfo, storeLoginInfo } from "../utils"
 
 interface UserInfo {
-  isUserLoggedIn: boolean
   user: Usuario | null
 }
 
@@ -17,18 +23,30 @@ export interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | null>(null)
 
 function AuthProvider({ children }: { children: ReactNode }) {
+  const storedLoginInfo = getStoredLoginInfo()
+
   const [userInfo, setUserInfo] = useState<UserInfo>({
-    isUserLoggedIn: false,
-    user: null
+    user: storedLoginInfo.user
   })
+
+  useEffect(() => {
+    const login = getStoredLoginInfo()
+    setUserInfo({
+      user: login.user
+    })
+  }, [])
+
+  useEffect(() => {
+    storeLoginInfo({
+      user: userInfo.user
+    } as LoginInfo)
+  }, [userInfo])
+
   const login = async (email: string, password: string) => {
     return apiService.login(email, password).then((user) => {
       setUserInfo({
-        isUserLoggedIn: true,
         user: user
       })
-      localStorage.setItem("isLoggedIn", "true")
-      localStorage.setItem("isAdmin",( user.e_admin == 1).toString())
       return user
     })
   }
@@ -36,11 +54,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     apiService.logout()
     setUserInfo({
-      isUserLoggedIn: true,
       user: null
     })
-    localStorage.setItem("isLoggedIn", "false")
-      localStorage.setItem("isAdmin", "false")
   }
 
   return (
@@ -66,4 +81,5 @@ function useAuth() {
   return context
 }
 
-export { AuthProvider, AuthContext, useAuth }
+export { AuthContext, AuthProvider, useAuth }
+

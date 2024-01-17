@@ -6,28 +6,26 @@ import {
   SidebarForAdmin
 } from "./components"
 import { Outlet } from "react-router-dom"
-import { useAuth } from "./contexts/"
+import { useAuth } from "./contexts"
 
 function App() {
   const [isMenuOpen, setMenuOpen] = useState(true)
 
   const { userInfo } = useAuth()
 
-  // const isAdmin = userInfo.user?.e_admin == 1
-
-  const isAdmin = localStorage.getItem("isAdmin") 
+  const  isAdmin = userInfo?.user?.e_admin === 1
 
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 ">
-        {(isAdmin == "false") && (
+        {!isAdmin && (
           <SideBarForUser
             className={`w-0  bg-gray-700 ${
               isMenuOpen ? "md:w-52" : "md:w-0"
             } sticky top-0 h-screen flex-shrink-0 duration-200`}
           />
         )}
-        {(isAdmin == "true") && (
+        {isAdmin && (
           <SidebarForAdmin
             className={`w-0  bg-gray-700 ${
               isMenuOpen ? "md:w-52" : "md:w-0"
@@ -35,7 +33,7 @@ function App() {
           />
         )}
         <div className="h-full w-full">
-          {(isAdmin == "false") && (
+          {!isAdmin && (
             <Header
               className="sticky top-0 z-10 bg-gray-700 md:flex-grow"
               isMenuOpen={isMenuOpen}
@@ -44,7 +42,7 @@ function App() {
               }}
             />
           )}
-          {(isAdmin == "true") && (
+          {isAdmin && (
             <HeaderForAdmin
               className="sticky top-0 z-10 bg-gray-700 md:flex-grow"
               isMenuOpen={isMenuOpen}

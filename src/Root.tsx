@@ -1,19 +1,17 @@
-import { Routes } from "./Routes"
 import { AdminRoutes } from "./AdminRoutes"
-import { useAuth } from "./contexts"
 import { AuthRoutes } from "./AuhtRoutes"
+import { Routes } from "./Routes"
+import { useAuth } from "./contexts"
 
 const Root = () => {
   const { userInfo } = useAuth()
+  const { user } = userInfo
 
-  const isLoggedIn = localStorage.getItem("isLoggedIn") 
-  const isAdmin = localStorage.getItem("isAdmin") 
-
-  if (isLoggedIn == "false") {
+  if (user === null || user === undefined) {
     return <AuthRoutes />
   }
 
-  if ( ( isAdmin == "true")) {
+  if (user.e_admin === 1) {
     return <AdminRoutes />
   } else {
     return <Routes />
