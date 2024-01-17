@@ -30,10 +30,12 @@ export const ClockInTable = ({
   userId,
   defaultPerPage,
   pagination,
+  loadTrigger
 }: {
   userId: number
   defaultPerPage: number
   pagination: boolean,
+  loadTrigger: number
 }) => {
   const [data, setData] = useState<PontoTable[]>([])
   const [loading, setLoading] = useState(false)
@@ -116,7 +118,7 @@ export const ClockInTable = ({
 
   useEffect(() => {
     fetchClockInData()
-  }, [currentPage, perPage])
+  }, [currentPage, perPage, loadTrigger])
 
   const paginationComponentOptions = {
     rowsPerPageText: "Linhas por página",
