@@ -1,9 +1,13 @@
+import { useState } from "react"
 import { DashboarItem, DoClockIn, ScreenTitle } from "../../components"
 import ClockInTable from "../../components/ClockInTable"
 import { useAuth } from "../../contexts"
 
 const Dashboard = () => {
   const { userInfo } = useAuth()
+  const userId = userInfo.user?.id
+
+  const [loadTrigger, setLoadTrigger] = useState<number>(0)
 
   return (
     <>
@@ -37,14 +41,24 @@ const Dashboard = () => {
       <ScreenTitle title="Ponto" />
       <hr className="mb-2 border-t-2 pb-4" />
       <div className="flex flex-col gap-4 md:gap-10 lg:flex lg:flex-row">
-        <DoClockIn userId={userInfo.user?.id || 0}/>
-        <div className="">
-          <ClockInTable
-            userId={userInfo.user?.id || 0}
-            defaultPerPage={4}
-            pagination={false}
-          />
-        </div>
+        {userId && (
+          <>
+            <DoClockIn
+              userId={userId}
+              onClockIn={() => {
+                setLoadTrigger((prev) => prev + 1)
+              }}
+            />
+            <div className="">
+              <ClockInTable
+                userId={userId}
+                defaultPerPage={8}
+                pagination={true}
+                loadTrigger={loadTrigger}
+              />
+            </div>
+          </>
+        )}
       </div>
     </>
   )
