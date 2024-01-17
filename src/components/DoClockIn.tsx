@@ -1,7 +1,13 @@
 import React, { useState, useEffect, MouseEvent } from "react"
 import { apiService } from "../services/apiService"
 
-const DoClockIn = ({userId}: {userId:number}) => {
+const DoClockIn = ({
+  userId,
+  onClockIn
+}: {
+  userId: number
+  onClockIn: () => void
+}) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
 
   useEffect(() => {
@@ -17,6 +23,7 @@ const DoClockIn = ({userId}: {userId:number}) => {
     apiService
       .doClockIn(userId)
       .then(() => {
+        onClockIn()
         console.log("Sucesso ao bater o ponto")
       })
       .catch((error) => {
