@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { Button, ScreenTitle, ValidationError } from "../../components"
 import { ChangeEvent, useState } from "react"
-import { apiService } from "../../services/apiService"
+import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 import { Link } from "react-router-dom"
 
@@ -45,17 +45,21 @@ const UserRegister = () => {
       .then((user) => {
         setRegisterStatus({
           success: true,
-          message: "Continue seu cadastro. Um e-mail foi enviado com as instruções para continuar seu cadastro. "
+          message:
+            "Continue seu cadastro. Um e-mail foi enviado com as instruções para continuar seu cadastro. "
         })
         reset()
         setPhoneNumber("")
       })
-      .catch((error: AxiosError) => {
-        console.log("Falha ao cadastrar usuário", error)
+      .catch((error: AxiosError<ApiErrorResponse>) => {
+        const errorMessage =
+          error.response?.data.error || "Erro ao enviar email"
+
         setRegisterStatus({
           success: false,
-          message: "Falha ao cadastrar usuário"
+          message: errorMessage
         })
+        console.log(errorMessage, error.response?.statusText)
       })
   }
 
@@ -145,7 +149,7 @@ const UserRegister = () => {
             <span>
               Já tem uma conta?{" "}
               <Link className="text-blue-600/85" to={"/"}>
-               Faça login aqui
+                Faça login aqui
               </Link>
             </span>
           </div>
@@ -156,7 +160,8 @@ const UserRegister = () => {
             <div
               role="alert"
               className="mt-1 self-center rounded-full bg-green-700/70 px-4 py-1 text-xs text-slate-200">
-             Continue seu cadastro. Um e-mail foi enviado com as instruções para continuar seu cadastro.
+              Continue seu cadastro. Um e-mail foi enviado com as instruções
+              para continuar seu cadastro.
             </div>
           )}
           {registerStatus?.success == false && (

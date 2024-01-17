@@ -5,7 +5,7 @@ import { navigationRoutes } from "../../RoutePaths"
 import { useAuth } from "../../contexts"
 import { AxiosError } from "axios"
 import { useState } from "react"
-import { apiService } from "../../services/apiService"
+import { ApiErrorResponse, apiService } from "../../services/apiService"
 
 type FormPasswordResetData = {
   email: string
@@ -35,16 +35,15 @@ const PasswordReset = () => {
           message: "E-mail enviado"
         })
       })
-      .catch((e: AxiosError) => {
-        var errMessage = "Erro ao enviar email"
-        if (e.response?.status === 404) {
-          errMessage = "Este e-mail não está cadastrado"
-        }
+      .catch((error: AxiosError<ApiErrorResponse>) => {
+        var errorMessage = error.response?.data.error || "Erro ao enviar email"
+
         setPasswordChangeStatus({
           success: false,
-          message: errMessage
+          message: errorMessage
         })
-        console.log(errMessage, e)
+
+        console.log(errorMessage, error.response?.statusText)
       })
   }
 

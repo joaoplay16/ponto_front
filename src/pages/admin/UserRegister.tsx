@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { Button, ScreenTitle, ValidationError } from "../../components"
 import { ChangeEvent, useState } from "react"
-import { apiService } from "../../services/apiService"
+import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 
 type FormUpdateUserRegisterData = {
@@ -25,7 +25,6 @@ const WorkingHoursReport = () => {
 
   const [phoneNumber, setPhoneNumber] = useState<string>()
 
-
   const [registerStatus, setRegisterStatus] = useState<{
     success: boolean
     message: string
@@ -34,34 +33,38 @@ const WorkingHoursReport = () => {
   async function onSubmit(data: FormUpdateUserRegisterData) {
     const { name, user_name, phone, email, isAdmin } = data
 
+    apiService
+      .registerUser({
+        nome: name,
+        nome_de_usuario: user_name,
+        celular: phone,
+        email,
+        e_admin: isAdmin
+      })
+      .then((user) => {
+        setRegisterStatus({
+          success: true,
+          message: "Usuário cadastrado com sucesso"
+        })
+        reset()
+        setPhoneNumber("")
+      })
+      .catch((error: AxiosError<ApiErrorResponse>) => {
+        const errorMessage =
+          error.response?.data.error || "Falha ao cadastrar usuário"
+          setRegisterStatus({
+            success: false,
+            message: errorMessage
+          })
+          console.log(errorMessage, error.response?.statusText)
+      })
+  }
 
-      apiService
-        .registerUser({
-          nome: name,
-          nome_de_usuario: user_name,
-          celular: phone,
-          email,
-          e_admin: isAdmin
-        })
-        .then((user) => {
-            setRegisterStatus({
-              success: true,
-              message: "Usuário cadastrado com sucesso"
-            })
-            reset()
-            setPhoneNumber("")
-        })
-        .catch((error: AxiosError) => {
-          console.log("Falha ao cadastrar usuário", error)
-          setRegisterStatus({ success: false, message: "Falha ao cadastrar usuário" })
-        })
-    }
-
-    const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-      var numericValue = e.target.value.replace(/\D/g, "") // Remove todos os caracteres não numéricos
-      numericValue = numericValue.slice(0, 11) // limita para 11 digitos
-      setPhoneNumber(numericValue)
-    }
+  const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    var numericValue = e.target.value.replace(/\D/g, "") // Remove todos os caracteres não numéricos
+    numericValue = numericValue.slice(0, 11) // limita para 11 digitos
+    setPhoneNumber(numericValue)
+  }
 
   return (
     <div>
@@ -71,7 +74,10 @@ const WorkingHoursReport = () => {
         <img
           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
           className="h-28 w-28 rounded-full border-4 border-orange-400 bg-slate-600"></img>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-1">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+          className="flex flex-col gap-1">
           <input
             type="text"
             id="name"
@@ -85,7 +91,7 @@ const WorkingHoursReport = () => {
               }
             })}
           />
-           <ValidationError fieldError={errors.name} />
+          <ValidationError fieldError={errors.name} />
 
           <input
             type="text"
@@ -104,7 +110,7 @@ const WorkingHoursReport = () => {
               }
             })}
           />
-           <ValidationError fieldError={errors.user_name} />
+          <ValidationError fieldError={errors.user_name} />
           <input
             type="text"
             id="phone"
@@ -124,7 +130,7 @@ const WorkingHoursReport = () => {
             value={phoneNumber}
             onChange={handlePhoneNumberChange}
           />
-           <ValidationError fieldError={errors.phone} />
+          <ValidationError fieldError={errors.phone} />
           <input
             type="email"
             id="email"
@@ -138,32 +144,34 @@ const WorkingHoursReport = () => {
               }
             })}
           />
-           <ValidationError fieldError={errors.email} />
+          <ValidationError fieldError={errors.email} />
           <div className="flex self-end ">
-            <label htmlFor="email" className=" text-sm mr-2">É administrador? </label>
-          <input
-            type="checkbox"
-            id="admin"
-            className="focus:orange-500 block w-4 rounded-lg border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:ring-orange-500"
-          />
-            </div> 
+            <label htmlFor="email" className=" mr-2 text-sm">
+              É administrador?{" "}
+            </label>
+            <input
+              type="checkbox"
+              id="admin"
+              className="focus:orange-500 block w-4 rounded-lg border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:ring-orange-500"
+            />
+          </div>
           <div className="flex gap-2 self-center pt-2">
             <Button type="submit">Salvar</Button>
           </div>
           {registerStatus?.success && (
-                <div
-                  role="alert"
-                  className="mt-1 self-center rounded-full bg-green-700/70 px-4 py-1 text-xs text-slate-200">
-                  {registerStatus.message}
-                </div>
-              )}
+            <div
+              role="alert"
+              className="mt-1 self-center rounded-full bg-green-700/70 px-4 py-1 text-xs text-slate-200">
+              {registerStatus.message}
+            </div>
+          )}
           {registerStatus?.success == false && (
-                <div
-                  role="alert"
-                  className="mt-1 self-center rounded-full bg-red-700/70 px-4 py-1 text-xs text-slate-200">
-                  {registerStatus.message}
-                </div>
-              )}
+            <div
+              role="alert"
+              className="mt-1 self-center rounded-full bg-red-700/70 px-4 py-1 text-xs text-slate-200">
+              {registerStatus.message}
+            </div>
+          )}
         </form>
       </div>
     </div>

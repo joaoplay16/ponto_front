@@ -5,6 +5,7 @@ import { navigationRoutes } from "../../RoutePaths"
 import { useAuth } from "../../contexts"
 import { AxiosError } from "axios"
 import { useState } from "react"
+import { ApiErrorResponse } from "../../services/apiService"
 
 type FormUpdateLoginData = {
   email: string
@@ -32,14 +33,16 @@ const Login = () => {
     login(data.email, data.password)
       .then((user) => {
         console.log("USUARIO LOGADO", user)
-     
         navigator("/")
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<ApiErrorResponse>) => {
+        const errorMessage = error.response?.data.error || "Erro ao fazer login"
         setLoginStatus({
             success: false,
-            message: "Erro ao fazer login"
+            message: errorMessage
         })
+
+        console.log(errorMessage, error.response?.statusText)
       })
   }
 

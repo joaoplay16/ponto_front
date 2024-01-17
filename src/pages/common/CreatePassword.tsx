@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { Button, ValidationError } from "../../components"
 import { useState } from "react"
-import { apiService } from "../../services/apiService"
+import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 import { useLocation, useNavigate } from "react-router-dom"
 
@@ -56,12 +56,16 @@ const CreatePassword = () => {
             navigator("/")
           }, 2000)
         })
-        .catch((error: AxiosError) => {
-          console.log("Falha ao alterar a senha", error)
+        .catch((error: AxiosError<ApiErrorResponse>) => {
+          const errorMessage =
+            error.response?.data.error || "Falha ao alterar a senha"
+
           setChangePasswordStatus({
             success: false,
-            message: "Falha ao alterar a senha"
+            message: errorMessage
           })
+
+          console.log(errorMessage, error.response?.statusText)
         })
     }
   }

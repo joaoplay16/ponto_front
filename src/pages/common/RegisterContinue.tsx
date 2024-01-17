@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { Button, ValidationError } from "../../components"
 import { useState } from "react"
-import { apiService } from "../../services/apiService"
+import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 import { useLocation, useNavigate } from "react-router-dom"
 
@@ -11,12 +11,11 @@ type FormContinueRegisterData = {
 }
 
 const RegisterContinue = () => {
-
   const navigator = useNavigate()
 
-  const location = useLocation();
+  const location = useLocation()
 
-  const queryParams = new URLSearchParams(location.search);
+  const queryParams = new URLSearchParams(location.search)
 
   const username = queryParams.get("usuario")
 
@@ -54,15 +53,19 @@ const RegisterContinue = () => {
           })
           reset()
           setTimeout(() => {
-              navigator("/")
+            navigator("/")
           }, 2000)
         })
-        .catch((error: AxiosError) => {
-          console.log("Falha ao continuar o cadastro", error)
+        .catch((error: AxiosError<ApiErrorResponse>) => {
+          const errorMessage =
+            error.response?.data.error || "Erro ao enviar email"
+
           setRegisterStatus({
             success: false,
-            message: "Falha ao continuar o cadastro"
+            message: errorMessage
           })
+
+          console.log(errorMessage, error.response?.statusText)
         })
     }
   }
@@ -70,7 +73,10 @@ const RegisterContinue = () => {
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="w-full max-w-80 gap-2 rounded-xl bg-gray-200 p-6 text-sm text-slate-600 shadow-md">
-        <h1 className="pb-2 text-2xl">Continue seu cadastro <span className="text-orange-400">{username}</span></h1>
+        <h1 className="pb-2 text-2xl">
+          Continue seu cadastro{" "}
+          <span className="text-orange-400">{username}</span>
+        </h1>
 
         <form
           onSubmit={handleSubmit(onSubmit)}

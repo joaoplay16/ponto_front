@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts"
 import { ChangeEvent, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Usuario } from "../../types"
-import { apiService } from "../../services/apiService"
+import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 import { useForm } from "react-hook-form"
 
@@ -23,10 +23,16 @@ const UserProfile = () => {
         .getUser(Number(id))
         .then((user) => {
           setUser(user)
-    
         })
-        .catch((e: AxiosError) => {
-          setUpdateStatus({ success: false, message: "Usuario não encontrado" })
+        .catch((error: AxiosError<ApiErrorResponse>) => {
+          const errorMessage =
+            error.response?.data.error || "Usuario não encontrado"
+          setUpdateStatus({
+            success: false,
+            message: errorMessage
+          })
+
+          console.log(errorMessage, error.response?.statusText)
         })
     }
   }
@@ -39,7 +45,7 @@ const UserProfile = () => {
 
   async function onSubmit() {
     if (user) {
-      const {criado_em, ...userToUpdate} = user
+      const { criado_em, ...userToUpdate } = user
       apiService
         .updateUser({ ...userToUpdate, ativo: user.ativo == 1 ? 0 : 1 })
         .then((affectedRows) => {
@@ -51,9 +57,16 @@ const UserProfile = () => {
             fetchUser()
           }
         })
-        .catch((error: AxiosError) => {
-          console.log("Falha ao atualizar", error)
-          setUpdateStatus({ success: false, message: "Falha ao atualizar" })
+        .catch((error: AxiosError<ApiErrorResponse>) => {
+          const errorMessage =
+            error.response?.data.error || "Falha ao atualizar"
+
+          setUpdateStatus({
+            success: false,
+            message: errorMessage
+          })
+
+          console.log(errorMessage, error.response?.statusText)
         })
     }
   }
@@ -63,9 +76,10 @@ const UserProfile = () => {
       <ScreenTitle title="Perfil" />
       <hr className="mb-3 border-t-2" />
       <h5 className="my-1 text-sm text-gray-600 md:my-3 md:text-[20px] ">
-      Você está na área administrativa para visualização do perfil do colaborador.
+        Você está na área administrativa para visualização do perfil do
+        colaborador.
       </h5>
-   
+
       <div className="flex flex-wrap gap-8">
         <div className="w-80">
           <div className="flex max-w-96 flex-col gap-2 rounded-xl bg-gray-200 px-3 py-2 text-sm text-slate-600 shadow-md">
