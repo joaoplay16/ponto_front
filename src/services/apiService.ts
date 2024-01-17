@@ -70,6 +70,10 @@ export type FinishUserPasswordChangeParamns = {
   senha: string
 }
 
+export type ApiErrorResponse = {
+  error: string
+}
+
 type ApiService = {
   userClockInReport: (params: ClockInReporParamns) => Promise<PontosData>
   userWorkingHoursReport: (
