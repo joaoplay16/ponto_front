@@ -2,8 +2,8 @@ import { CardInfo, ScreenTitle, WorkingHoursTable } from "../../components"
 import { useAuth } from "../../contexts"
 
 const WorkingHoursReport = () => {
-
-  const {userInfo} = useAuth()
+  const { userInfo } = useAuth()
+  const userId = userInfo.user?.id
 
   return (
     <div>
@@ -15,7 +15,13 @@ const WorkingHoursReport = () => {
       </h5>
       <div className="flex flex-wrap gap-4 md:gap-16">
         <div className="">
-          <WorkingHoursTable defaultPerPage={12} pagination userId={userInfo.user?.id || 0} />
+          {userId && (
+            <WorkingHoursTable
+              defaultPerPage={12}
+              pagination
+              userId={userId}
+            />
+          )}
         </div>
         <CardInfo />
       </div>
