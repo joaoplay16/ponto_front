@@ -155,27 +155,7 @@ export const WorkingHoursTable = ({
 
   return (
     <div className="flex flex-col ">
-      <DataTable
-        columns={columns}
-        data={data}
-        progressPending={loading}
-        pagination={pagination}
-        paginationServer
-        paginationTotalRows={totalRows}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
-        paginationComponentOptions={paginationComponentOptions}
-        paginationRowsPerPageOptions={[4, 8, 12, 20]}
-        paginationPerPage={defaultPerPage}
-        noDataComponent="Nenhum registro de horas trabalhadas encontrado"
-      />
-      {totalRows > 0 && (
-        <div className="mb-2 self-end rounded-full bg-slate-600 px-6 py-1 text-[16px] text-gray-200">
-          <span> Total de horas trabalhadas {totalWorkingHoursPerMonth}</span>
-        </div>
-      )}
-
-      <div className="flex flex-grow-0 justify-end gap-2">
+      <div className="flex flex-grow-0 justify-end gap-2 ">
         <Select
           title={"Mês"}
           values={Array.from({ length: 12 }, (_, index) => index + 1)}
@@ -199,6 +179,25 @@ export const WorkingHoursTable = ({
           }}
         />
       </div>
+      {totalRows > 0 && (
+        <div className="mb-2 mt-3 self-end rounded-full bg-slate-600 px-6 py-1 text-[16px] text-gray-200">
+          <span> Total de horas trabalhadas {totalWorkingHoursPerMonth}</span>
+        </div>
+      )}
+      <DataTable
+        columns={columns}
+        data={data}
+        progressPending={loading}
+        pagination={pagination}
+        paginationServer
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+        paginationComponentOptions={paginationComponentOptions}
+        paginationRowsPerPageOptions={[4, 8, 12, 20]}
+        paginationPerPage={defaultPerPage}
+        noDataComponent="Nenhum registro de horas trabalhadas encontrado"
+      />
     </div>
   )
 }
