@@ -152,8 +152,7 @@ const HeaderForAdmin = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
               </a>
               <a
               onClick={logout}
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700"
+                className="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
                 role="menuitem"
                 tabIndex={-1}
                 id="user-menu-item-1">
