@@ -40,6 +40,7 @@ const columns: TableColumn<Usuario>[] = [
     name: "Ativo",
     selector: (row) => row.ativo,
     sortable: true,
+    format: (row) => { return row.ativo ===  1 ? "sim" : "não"}
   }
 ]
 
