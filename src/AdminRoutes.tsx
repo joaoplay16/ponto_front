@@ -1,7 +1,7 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { lazy, Suspense } from "react"
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import App from "./App"
 import { navigationRoutes as navRoutes } from "./RoutePaths"
-import { lazy, Suspense } from "react"
 
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"))
 const WorkingHoursReport = lazy(() => import("./pages/admin/WorkingHoursReport"))
@@ -11,6 +11,10 @@ const UserProfile = lazy(() => import("./pages/admin/UserProfile"))
 const Login = lazy(() => import("./pages/common/Login"))
 
 const router = createBrowserRouter([
+  {
+    path: "/*",
+    element: <Navigate to={"/"} />
+  },
   {
     path: "/",
     element: <App />,

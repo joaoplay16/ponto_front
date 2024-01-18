@@ -10,13 +10,13 @@ const CreatePassword = lazy(() => import("./pages/common/CreatePassword"))
 
 const router = createBrowserRouter([
   {
+    path: "/*", // Redireciona de volta para o login ao acessar rotas desconhecidas
+    element: <Navigate to={"/"}/>,
+  },
+  {
     path: "/",
     index: true,
     element: <Login />
-  },
-  {
-    path: "/*", // Redireciona de volta para o login ao acessar rotas desconhecidas
-    element: <Navigate to={"/"}/>
   },
   {
     path: navigationRoutes.register,

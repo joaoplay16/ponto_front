@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import App from "./App"
 import { navigationRoutes as navRoutes } from "./RoutePaths"
 import { lazy, Suspense } from "react"
@@ -9,6 +9,10 @@ const WorkingHoursReport = lazy(() => import("./pages/user/WorkingHoursReport"))
 const Profile = lazy(() => import("./pages/user/Profile"))
 
 const router = createBrowserRouter([
+  {
+    path: "/*", // Redireciona de volta para o login ao acessar rotas desconhecidas
+    element: <Navigate to="/" />
+  },
   {
     path: "/",
     element: <App />,
