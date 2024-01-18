@@ -169,7 +169,7 @@ const Profile = () => {
                 />
                 <ValidationError fieldError={errors.phone} />
                 <input
-                  type="text"
+                  type="password"
                   id="password"
                   className="focus:orange-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:ring-orange-500"
                   placeholder="Senha"
@@ -186,7 +186,7 @@ const Profile = () => {
                 />
                 <ValidationError fieldError={errors.password} />
                 <input
-                  type="text"
+                  type="password"
                   id="repeatPassword"
                   className="focus:orange-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:ring-orange-500"
                   placeholder="Repita a senha"
