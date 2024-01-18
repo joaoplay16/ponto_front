@@ -4,6 +4,9 @@ import { AllUsersWorkingHoursData, apiService } from "../services/apiService"
 import { getDayName, getMonth } from "../utils"
 import Select from "./Select"
 import { WorkingHoursWithUserTableType } from "../types/workingHours"
+import { error } from "console"
+import { AxiosError } from "axios"
+import { useAuth } from "../contexts"
 
 const columns: TableColumn<WorkingHoursWithUserTableType>[] = [
   {
@@ -52,6 +55,8 @@ export const AllUsersWorkingHoursTable = ({
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
   const [selectedCargo, setSelectedCargo] = useState("")
 
+  const { logout } = useAuth()
+
   const fetchAllUsersWorkingHours = async () => {
     setLoading(true)
 
@@ -59,26 +64,38 @@ export const AllUsersWorkingHoursTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular perPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * perPage registros para chegar à terceira página, e assim por diante.
 
-    const workingHoursData: AllUsersWorkingHoursData =
-      await apiService.allUsersWorkingHoursReport({
+    apiService
+      .allUsersWorkingHoursReport({
         limit: perPage,
         offset: (currentPage - 1) * perPage,
         mes: selectedMonth,
         ano: selectedYear,
         cargo: selectedCargo
       })
+      .then((workingHoursData) => {
+        const data: WorkingHoursWithUserTableType[] = workingHoursData.rows.map(
+          (item) =>
+            ({
+              ...item,
+              dia_da_semana: getDayName(item.dia_da_semana)
+            }) as WorkingHoursWithUserTableType
+        )
 
-    const data: WorkingHoursWithUserTableType[] = workingHoursData.rows.map(
-      (item) =>
-        ({
-          ...item,
-          dia_da_semana: getDayName(item.dia_da_semana)
-        }) as WorkingHoursWithUserTableType
-    )
+        setData(data)
+        setTotalRows(workingHoursData.count)
+        setLoading(false)
+      })
+      .catch((error: AxiosError) => {
+        setLoading(false)
 
-    setData(data)
-    setTotalRows(workingHoursData.count)
-    setLoading(false)
+        if (error.response?.status == 403) {
+          logout()
+        }
+        console.log(
+          "Errro ao buscar horas trabalhadas dos usuários -> ",
+          error.message
+        )
+      })
   }
 
   const handlePageChange = (page: number) => {
@@ -93,27 +110,39 @@ export const AllUsersWorkingHoursTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular newPerPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * newPerPage registros para chegar à terceira página, e assim por diante.
 
-    const workingHoursData: AllUsersWorkingHoursData =
-      await apiService.allUsersWorkingHoursReport({
+    apiService
+      .allUsersWorkingHoursReport({
         limit: perPage,
         offset: (currentPage - 1) * perPage,
         mes: selectedMonth,
         ano: selectedYear,
         cargo: selectedCargo
       })
+      .then((workingHoursData) => {
+        const data: WorkingHoursWithUserTableType[] = workingHoursData.rows.map(
+          (item) =>
+            ({
+              ...item,
+              dia_da_semana: getDayName(item.dia_da_semana)
+            }) as WorkingHoursWithUserTableType
+        )
 
-    const data: WorkingHoursWithUserTableType[] = workingHoursData.rows.map(
-      (item) =>
-        ({
-          ...item,
-          dia_da_semana: getDayName(item.dia_da_semana)
-        }) as WorkingHoursWithUserTableType
-    )
+        setData(data)
+        setTotalRows(workingHoursData.count)
+        setLoading(false)
+      })
+      .catch((error: AxiosError) => {
+        setLoading(false)
 
-    setData(data)
-    setPerPage(newPerPage)
+        if (error.response?.status == 403) {
+          logout()
+        }
+        console.log(
+          "Errro ao buscar horas trabalhadas dos usuários -> ",
+          error.message
+        )
+      })
     setCurrentPage(page)
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -129,7 +158,7 @@ export const AllUsersWorkingHoursTable = ({
 
   return (
     <div className="flex flex-col ">
-       <div className="flex flex-grow-0 justify-end gap-2">
+      <div className="flex flex-grow-0 justify-end gap-2">
         <Select
           title={"Mês"}
           values={Array.from({ length: 12 }, (_, index) => index + 1)}
