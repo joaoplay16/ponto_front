@@ -56,7 +56,7 @@ const WorkingHoursReport = () => {
             success: false,
             message: errorMessage
           })
-          console.log(errorMessage, error.response?.statusText)
+          console.log(`${errorMessage} -> ${error.message}`)
       })
   }
 

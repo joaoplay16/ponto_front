@@ -65,7 +65,7 @@ const RegisterContinue = () => {
             message: errorMessage
           })
 
-          console.log(errorMessage, error.response?.statusText)
+          console.log(`${errorMessage} -> ${error.message}`)
         })
     }
   }

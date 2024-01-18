@@ -59,7 +59,7 @@ const UserRegister = () => {
           success: false,
           message: errorMessage
         })
-        console.log(errorMessage, error.response?.statusText)
+        console.log(`${errorMessage} -> ${error.message}`)
       })
   }
 
