@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import { Login } from "./pages/common"
 import { navigationRoutes } from "./RoutePaths"
 import { lazy, Suspense } from "react"
@@ -13,6 +13,10 @@ const router = createBrowserRouter([
     path: "/",
     index: true,
     element: <Login />
+  },
+  {
+    path: "/*", // Redireciona de volta para o login ao acessar rotas desconhecidas
+    element: <Navigate to={"/"}/>
   },
   {
     path: navigationRoutes.register,
