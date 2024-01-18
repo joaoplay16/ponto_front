@@ -40,7 +40,7 @@ export const WorkingHoursTable = ({
   const [data, setData] = useState<WorkingHoursTableType[]>([])
   const [loading, setLoading] = useState(false)
   const [totalRows, setTotalRows] = useState(4)
-  const [perPage, setPerPage] = useState(0)
+  const [perPage, setPerPage] = useState(defaultPerPage)
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
@@ -115,8 +115,6 @@ export const WorkingHoursTable = ({
             }) as WorkingHoursTableType
         )
         setData(data)
-        setPerPage(newPerPage)
-        setCurrentPage(page)
         setLoading(false)
       })
       .catch((error: AxiosError<ApiErrorResponse>) => {
@@ -126,6 +124,8 @@ export const WorkingHoursTable = ({
           `Erro ao buscar horas trabalhadas do usuário -> ${ error.message}`,
         )
       })
+    setPerPage(newPerPage)
+    setCurrentPage(page)
   }
 
   useEffect(() => {
