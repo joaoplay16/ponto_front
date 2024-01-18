@@ -17,7 +17,7 @@ type FormUpdateProfileData = {
 }
 
 const Profile = () => {
-  const { userInfo } = useAuth()
+  const { userInfo, logout } = useAuth()
 
   const [editMode, setEditMode] = useState(false)
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null)
@@ -75,6 +75,11 @@ const Profile = () => {
           }
         })
         .catch((error: AxiosError<ApiErrorResponse>) => {
+
+          if (error.response?.status == 403) {
+            logout()
+          }
+          
           const errorMessage =
             error.response?.data.error || "Erro ao enviar email"
 

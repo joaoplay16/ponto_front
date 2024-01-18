@@ -7,6 +7,7 @@ import Select from "./Select"
 import { error } from "console"
 import { AxiosError } from "axios"
 import { WorkingHoursPerMonthCount } from "../types/workingHours"
+import { useAuth } from "../contexts"
 
 const columns: TableColumn<WorkingHoursTableType>[] = [
   {
@@ -43,6 +44,9 @@ export const WorkingHoursTable = ({
   const [totalWorkingHoursPerMonth, setTotalWorkingHoursPerMonth] = useState<
     string | null
   >(null)
+
+  const { logout } = useAuth()
+
 
   const fetchClockInData = async () => {
     setLoading(true)
@@ -119,6 +123,9 @@ export const WorkingHoursTable = ({
         setTotalWorkingHoursPerMonth(data.horas_trabalhadas)
       })
       .catch((error: AxiosError) => {
+        if (error.response?.status == 403) {
+          logout()
+        }
         console.log("Errro ao buscar horas trabalhadas totais", error)
       })
   }, [selectedYear, selectedMonth])

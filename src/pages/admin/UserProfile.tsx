@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form"
 const UserProfile = () => {
   const { id } = useParams()
 
+  const { logout } = useAuth()
+
   const [user, setUser] = useState<Usuario | null>(null)
 
   const [updateStatus, setUpdateStatus] = useState<{
@@ -25,6 +27,11 @@ const UserProfile = () => {
           setUser(user)
         })
         .catch((error: AxiosError<ApiErrorResponse>) => {
+
+          if (error.response?.status == 403) {
+            logout()
+          }
+
           const errorMessage =
             error.response?.data.error || "Usuario não encontrado"
           setUpdateStatus({
@@ -58,6 +65,11 @@ const UserProfile = () => {
           }
         })
         .catch((error: AxiosError<ApiErrorResponse>) => {
+
+          if (error.response?.status == 403) {
+            logout()
+          }
+
           const errorMessage =
             error.response?.data.error || "Falha ao atualizar"
 

@@ -5,6 +5,7 @@ import { PontoTable } from "../types/ponto"
 import { getDayName } from "../utils"
 import { AxiosError } from "axios"
 import { ErrorResponse } from "react-router-dom"
+import { useAuth } from "../contexts"
 
 const columns: TableColumn<PontoTable>[] = [
   {
@@ -34,7 +35,7 @@ export const ClockInTable = ({
 }: {
   userId: number
   defaultPerPage: number
-  pagination: boolean,
+  pagination: boolean
   loadTrigger: number
 }) => {
   const [data, setData] = useState<PontoTable[]>([])
@@ -43,6 +44,7 @@ export const ClockInTable = ({
   const [perPage, setPerPage] = useState(defaultPerPage)
   const [currentPage, setCurrentPage] = useState(1)
 
+  const { logout } = useAuth()
 
   const fetchClockInData = async () => {
     setLoading(true)
@@ -71,7 +73,10 @@ export const ClockInTable = ({
         setLoading(false)
       })
       .catch((error: AxiosError<ErrorResponse>) => {
-        console.log("Erro ao buscar registro de pontos", error)
+        if (error.response?.status == 403) {
+          logout()
+        }
+        console.log("Erro ao buscar registro de pontos", error.response?.statusText)
       })
   }
 
@@ -106,10 +111,10 @@ export const ClockInTable = ({
         setLoading(false)
       })
       .catch((error: AxiosError) => {
-        console.log("Erro ao buscar registro de pontos", error)
-        if(error.status == 403){
-          apiService.logout()
+        if (error.response?.status == 403) {
+          logout()
         }
+        console.log("Erro ao buscar registro de pontos", error.response?.statusText)
       })
 
     setPerPage(newPerPage)
