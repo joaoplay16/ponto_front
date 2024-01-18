@@ -80,6 +80,9 @@ export const WorkingHoursTable = ({
       })
       .catch((error: AxiosError<ApiErrorResponse>) => {
         setLoading(false)
+        if (error.response?.status == 403) {
+          logout()
+        }
         console.log(
           `Erro ao buscar horas trabalhadas do usuário -> ${ error.message}`,
         )
@@ -119,7 +122,9 @@ export const WorkingHoursTable = ({
       })
       .catch((error: AxiosError<ApiErrorResponse>) => {
         setLoading(false)
-
+        if (error.response?.status == 403) {
+          logout()
+        }
         console.log(
           `Erro ao buscar horas trabalhadas do usuário -> ${ error.message}`,
         )
