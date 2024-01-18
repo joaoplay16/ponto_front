@@ -4,7 +4,6 @@ import { apiService } from "../services/apiService"
 import { PontoTable } from "../types/ponto"
 import { getDayName } from "../utils"
 import { AxiosError } from "axios"
-import { ErrorResponse } from "react-router-dom"
 import { useAuth } from "../contexts"
 
 const columns: TableColumn<PontoTable>[] = [
@@ -72,7 +71,7 @@ export const ClockInTable = ({
         setTotalRows(pontosData.count)
         setLoading(false)
       })
-      .catch((error: AxiosError<ErrorResponse>) => {
+      .catch((error: AxiosError) => {
         if (error.response?.status == 403) {
           logout()
         }
