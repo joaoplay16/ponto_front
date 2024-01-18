@@ -142,22 +142,23 @@ const HeaderForAdmin = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
               aria-orientation="vertical"
               aria-labelledby="user-menu-button"
               tabIndex={-1}>
-              <a
-                href="#"
+              <Link
+                to={navigationRoutes.admin.profile}
                 className="block px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
                 tabIndex={-1}
                 id="user-menu-item-0">
                 Perfil
-              </a>
-              <a
-              onClick={logout}
+              </Link>
+              <Link
+                to={"/"}
+                onClick={logout}
                 className="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
                 role="menuitem"
                 tabIndex={-1}
                 id="user-menu-item-1">
                 Sair
-              </a>
+              </Link>
             </div>
           </div>
         </div>

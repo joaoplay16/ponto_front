@@ -128,8 +128,8 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
                 alt=""
               />
 
-              <span className="font-medium text-slate-300"> 
-                {userInfo.user?.nome} 
+              <span className="font-medium text-slate-300">
+                {userInfo.user?.nome}
               </span>
             </button>
 
@@ -143,21 +143,22 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
               aria-labelledby="user-menu-button"
               tabIndex={-1}>
               <Link
-                to="/perfil"
+                to={navigationRoutes.user.profile}
                 className="block px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
                 tabIndex={-1}
                 id="user-menu-item-0">
                 Perfil
               </Link>
-              <a
-              onClick={logout}
-                className="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+              <Link
+                to={"/"}
+                onClick={logout}
+                className="block cursor-pointer px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
                 tabIndex={-1}
                 id="user-menu-item-1">
                 Sair
-              </a>
+              </Link>
             </div>
           </div>
         </div>
