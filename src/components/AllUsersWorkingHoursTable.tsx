@@ -51,9 +51,6 @@ export const AllUsersWorkingHoursTable = ({
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
   const [selectedCargo, setSelectedCargo] = useState("")
-  const [totalWorkingHoursPerMonth, setTotalWorkingHoursPerMonth] = useState<
-    string | null
-  >(null)
 
   const fetchAllUsersWorkingHours = async () => {
     setLoading(true)
