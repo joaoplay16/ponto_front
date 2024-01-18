@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 
 const columns: TableColumn<Usuario>[] = [
   {
-    name: "Data",
+    name: "Nome",
     selector: (row) => row.nome,
     sortable: true
   },
