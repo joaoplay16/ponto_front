@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
-import { WorkingHoursData, apiService } from "../services/apiService"
+import {
+  ApiErrorResponse,
+  WorkingHoursData,
+  apiService
+} from "../services/apiService"
 import { getDayName, getMonth } from "../utils"
 import { type WorkingHoursTableType } from "../types"
 import Select from "./Select"
-import { error } from "console"
 import { AxiosError } from "axios"
 import { WorkingHoursPerMonthCount } from "../types/workingHours"
 import { useAuth } from "../contexts"
@@ -47,7 +50,6 @@ export const WorkingHoursTable = ({
 
   const { logout } = useAuth()
 
-
   const fetchClockInData = async () => {
     setLoading(true)
 
@@ -55,26 +57,33 @@ export const WorkingHoursTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular perPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * perPage registros para chegar à terceira página, e assim por diante.
 
-    const workingHoursData: WorkingHoursData =
-      await apiService.userWorkingHoursReport({
+    apiService
+      .userWorkingHoursReport({
         userId: userId,
         limit: perPage,
         offset: (currentPage - 1) * perPage,
         mes: selectedMonth,
         ano: selectedYear
       })
+      .then((workingHoursData) => {
+        const data: WorkingHoursTableType[] = workingHoursData.rows.map(
+          (item) =>
+            ({
+              ...item,
+              dia_da_semana: getDayName(item.dia_da_semana)
+            }) as WorkingHoursTableType
+        )
 
-    const data: WorkingHoursTableType[] = workingHoursData.rows.map(
-      (item) =>
-        ({
-          ...item,
-          dia_da_semana: getDayName(item.dia_da_semana)
-        }) as WorkingHoursTableType
-    )
-
-    setData(data)
-    setTotalRows(workingHoursData.count)
-    setLoading(false)
+        setData(data)
+        setTotalRows(workingHoursData.count)
+        setLoading(false)
+      })
+      .catch((error: AxiosError<ApiErrorResponse>) => {
+        setLoading(false)
+        console.log(
+          `Erro ao buscar horas trabalhadas do usuário -> ${ error.message}`,
+        )
+      })
   }
 
   const handlePageChange = (page: number) => {
@@ -89,27 +98,34 @@ export const WorkingHoursTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular newPerPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * newPerPage registros para chegar à terceira página, e assim por diante.
 
-    const workingHoursData: WorkingHoursData =
-      await apiService.userWorkingHoursReport({
+    apiService
+      .userWorkingHoursReport({
         userId: userId,
         limit: newPerPage,
         offset: (page - 1) * newPerPage,
         mes: selectedMonth,
         ano: selectedYear
       })
+      .then((workingHoursData) => {
+        const data: WorkingHoursTableType[] = workingHoursData.rows.map(
+          (item) =>
+            ({
+              ...item,
+              dia_da_semana: getDayName(item.dia_da_semana)
+            }) as WorkingHoursTableType
+        )
+        setData(data)
+        setPerPage(newPerPage)
+        setCurrentPage(page)
+        setLoading(false)
+      })
+      .catch((error: AxiosError<ApiErrorResponse>) => {
+        setLoading(false)
 
-    const data: WorkingHoursTableType[] = workingHoursData.rows.map(
-      (item) =>
-        ({
-          ...item,
-          dia_da_semana: getDayName(item.dia_da_semana)
-        }) as WorkingHoursTableType
-    )
-
-    setData(data)
-    setPerPage(newPerPage)
-    setCurrentPage(page)
-    setLoading(false)
+        console.log(
+          `Erro ao buscar horas trabalhadas do usuário -> ${ error.message}`,
+        )
+      })
   }
 
   useEffect(() => {
@@ -126,7 +142,7 @@ export const WorkingHoursTable = ({
         if (error.response?.status == 403) {
           logout()
         }
-        console.log("Errro ao buscar horas trabalhadas totais", error)
+        console.log("Errro ao buscar horas trabalhadas totais -> ", error.message)
       })
   }, [selectedYear, selectedMonth])
 
