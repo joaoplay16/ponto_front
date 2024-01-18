@@ -8,6 +8,7 @@ import React, {
 import { apiService } from "../services/apiService"
 import { Usuario } from "../types"
 import { LoginInfo, getStoredLoginInfo, storeLoginInfo } from "../utils"
+import { AxiosError } from "axios"
 
 interface UserInfo {
   user: Usuario | null
@@ -52,7 +53,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = () => {
-    apiService.logout()
+    apiService.logout().catch((error: AxiosError) => {
+      console.log("Erro ao fazer logout -> ", error.message)
+    })
     setUserInfo({
       user: null
     })
