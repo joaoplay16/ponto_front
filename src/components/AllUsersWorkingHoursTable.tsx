@@ -36,7 +36,10 @@ const columns: TableColumn<WorkingHoursWithUserTableType>[] = [
   {
     name: "Horas trabalhadas",
     selector: (row) => row.horas_trabalhadas,
-    sortable: true
+    sortable: true,
+    format: (row) => { return row.horas_trabalhadas != null ? row.horas_trabalhadas : "Jornada incompleta"},
+    wrap: true,
+    minWidth: "150px"
   }
 ]
 

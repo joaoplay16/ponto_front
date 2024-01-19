@@ -25,7 +25,10 @@ const columns: TableColumn<WorkingHoursTableType>[] = [
   },
   {
     name: "Horas trabalhadas",
-    selector: (row) => row.horas_trabalhadas
+    selector: (row) => row.horas_trabalhadas,
+    format: (row) => { return row.horas_trabalhadas != null ? row.horas_trabalhadas : "Jornada incompleta"},
+    wrap: true,
+    minWidth: "150px"
   }
 ]
 
