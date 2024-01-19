@@ -145,6 +145,8 @@ export const ClockInTable = ({
       paginationRowsPerPageOptions={[4, 8, 12, 20]}
       paginationPerPage={defaultPerPage}
       noDataComponent="Nenhum registro de ponto encontrado"
+      defaultSortFieldId={1}
+      defaultSortAsc={false}
     />
   )
 }
