@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import App from "./App"
 import ErrorBoundary from "./Error"
 import { navigationRoutes as navRoutes } from "./RoutePaths"
+import { Profile } from "./pages/user"
 
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"))
 const WorkingHoursReport = lazy(
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Carregando</div>}>
             <UserProfile />
+          </Suspense>
+        )
+      },
+      {
+        path: navRoutes.admin.profile,
+        element: (
+          <Suspense fallback={<div>Carregando</div>}>
+            <Profile />
           </Suspense>
         )
       }
