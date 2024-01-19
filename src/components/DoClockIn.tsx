@@ -9,6 +9,7 @@ const DoClockIn = ({
   onClockIn: () => void
 }) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
+  const [clockInSuccess, setClockInSuccess] = useState<boolean | null>(null)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -24,11 +25,17 @@ const DoClockIn = ({
       .doClockIn(userId)
       .then(() => {
         onClockIn()
+        setClockInSuccess(true)
         console.log("Sucesso ao bater o ponto")
       })
       .catch((error) => {
+        setClockInSuccess(false)
         console.log("Erro ao bater o ponto")
       })
+
+    setTimeout(() => {
+      setClockInSuccess(null)
+    }, 3000)
   }
 
   const formattedDateTime = currentDateTime.toLocaleString("pt-BR", {
@@ -45,7 +52,22 @@ const DoClockIn = ({
       <h4 className="text-center font-light">{formattedDateTime}</h4>
       <button
         onClick={handleDoClokIn}
-        className="h-32 w-32 rounded-full bg-slate-600  focus:ring-2 focus:ring-orange-300"></button>
+        className={`h-32 w-32 rounded-full bg-slate-600 ring-4 ${
+          clockInSuccess === null
+            ? ""
+            : clockInSuccess
+              ? "ring-green-500"
+              : "ring-red-500"
+        }`}>
+        $
+        {clockInSuccess === null ? (
+          ""
+        ) : clockInSuccess ? (
+          <span className="text-white">sucesso</span>
+        ) : (
+          <span className="text-white">erro</span>
+        )}
+      </button>
       <h4 className="text-center font-light ">
         Clique aqui para bater o ponto
       </h4>
