@@ -124,6 +124,16 @@ export const AllUsersTable = ({
 
   return (
     <div className="flex flex-col ">
+        <div className="flex flex-grow-0 justify-end gap-2">
+        <Select
+          title={"Cargo"}
+          values={["colaborador", "gestor"]}
+          defaultValue={"colaborador"}
+          onSelect={function (selected: string | number): void {
+            setSelectedCargo(selected as string)
+          }}
+        />
+      </div>
       <DataTable
         columns={columns}
         data={data}
@@ -138,16 +148,6 @@ export const AllUsersTable = ({
         paginationPerPage={defaultPerPage}
         noDataComponent="Nenhum registro de horas trabalhadas encontrado"
       />
-      <div className="flex flex-grow-0 justify-end gap-2">
-        <Select
-          title={"Cargo"}
-          values={["colaborador", "gestor"]}
-          defaultValue={"colaborador"}
-          onSelect={function (selected: string | number): void {
-            setSelectedCargo(selected as string)
-          }}
-        />
-      </div>
     </div>
   )
 }
