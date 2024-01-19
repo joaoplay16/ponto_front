@@ -8,39 +8,50 @@ import { Link } from "react-router-dom"
 const columns: TableColumn<Usuario>[] = [
   {
     name: "Nome",
-    selector: (row) => row.nome,
-    sortable: true
-  },
-  {
-    name: "Dia da semana",
-    selector: (row) => row.cargo
-  },
-  {
-    name: "Nome",
     selector: (row) => row.nome_de_usuario,
     sortable: true,
-    cell: (row, rowIndex, column, id) => {
+    cell: (row) => {
         return(
-          <Link className="hover:text-orange-700" to={`/admin/usuario/${row.id}/perfil`}>
+          <Link className="text-blue-500 hover:text-orange-700" to={`/admin/usuario/${row.id}/perfil`}>
             {row.nome}
           </Link>
         )
-    }
-  },
-  {
-    name: "Nome de usuário",
-    selector: (row) => row.email,
-    sortable: true
+    },
+    center: true,
+    wrap: true,
+    minWidth: "230px"
   },
   {
     name: "Cargo",
-    selector: (row) => row.celular
+    selector: (row) => row.cargo,
+    wrap: true,
+    minWidth: "130px"
+  },
+  {
+    name: "Nome de usuário",
+    selector: (row) => row.nome_de_usuario,
+    sortable: true,
+    wrap: true,
+    minWidth: "150px"
+  },
+  {
+    name: "E-mail",
+    selector: (row) => row.email,
+    sortable: true,
+    wrap: true,
+    minWidth: "230px"
+  },
+  {
+    name: "Celular",
+    selector: (row) => row.celular,
+    wrap: true,
+    minWidth: "150px"
   },
   {
     name: "Ativo",
     selector: (row) => row.ativo,
     sortable: true,
-    format: (row) => { return row.ativo ===  1 ? "sim" : "não"}
+    format: (row) => { return row.ativo ===  1 ? "sim" : "não"},
   }
 ]
 
