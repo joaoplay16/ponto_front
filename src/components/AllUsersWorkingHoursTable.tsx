@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
 import { AllUsersWorkingHoursData, apiService } from "../services/apiService"
-import { getDayName, getMonth } from "../utils"
+import { formatDate, getDayName, getMonth } from "../utils"
 import Select from "./Select"
 import { WorkingHoursWithUserTableType } from "../types/workingHours"
 import { error } from "console"
@@ -12,7 +12,8 @@ const columns: TableColumn<WorkingHoursWithUserTableType>[] = [
   {
     name: "Data",
     selector: (row) => row.data,
-    sortable: true
+    sortable: true,
+    format: (row) => { return formatDate(row.data) }
   },
   {
     name: "Dia da semana",

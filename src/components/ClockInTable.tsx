@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
 import { apiService } from "../services/apiService"
 import { PontoTable } from "../types/ponto"
-import { getDayName } from "../utils"
+import { formatDate, getDayName } from "../utils"
 import { AxiosError } from "axios"
 import { useAuth } from "../contexts"
 
@@ -10,7 +10,8 @@ const columns: TableColumn<PontoTable>[] = [
   {
     name: "Data",
     selector: (row) => row.data,
-    sortable: true
+    sortable: true,
+    format: (row) => { return formatDate(row.data) }
   },
   {
     name: "Dia da semana",

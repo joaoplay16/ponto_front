@@ -5,7 +5,7 @@ import {
   WorkingHoursData,
   apiService
 } from "../services/apiService"
-import { getDayName, getMonth } from "../utils"
+import { formatDate, getDayName, getMonth } from "../utils"
 import { type WorkingHoursTableType } from "../types"
 import Select from "./Select"
 import { AxiosError } from "axios"
@@ -16,7 +16,8 @@ const columns: TableColumn<WorkingHoursTableType>[] = [
   {
     name: "Data",
     selector: (row) => row.data,
-    sortable: true
+    sortable: true,
+    format: (row) => { return formatDate(row.data) }
   },
   {
     name: "Dia da semana",
