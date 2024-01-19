@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import App from "./App"
 import { navigationRoutes as navRoutes } from "./RoutePaths"
 import { lazy, Suspense } from "react"
+import ErrorBoundary from "./Error"
 
 const Dashboard = lazy(() => import("./pages/user/Dashboard"))
 const ClockInReport = lazy(() => import("./pages/user/ClockInReport"))
@@ -15,7 +16,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    ),
     children: [
       {
         index: true,

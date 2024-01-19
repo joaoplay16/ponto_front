@@ -1,28 +1,34 @@
+import { lazy, Suspense } from "react"
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
+import ErrorBoundary from "./Error"
 import { Login } from "./pages/common"
 import { navigationRoutes } from "./RoutePaths"
-import { lazy, Suspense } from "react"
 
 const Register = lazy(() => import("./pages/common/Register"))
 const RegisterContinue = lazy(() => import("./pages/common/RegisterContinue"))
 const PasswordReset = lazy(() => import("./pages/common/PasswordReset"))
 const CreatePassword = lazy(() => import("./pages/common/CreatePassword"))
-
 const router = createBrowserRouter([
   {
     path: "/*", // Redireciona de volta para o login ao acessar rotas desconhecidas
-    element: <Navigate to={"/"}/>,
+    element: <Navigate to={"/"} />
   },
   {
     path: "/",
     index: true,
-    element: <Login />
+    element: (
+      <ErrorBoundary>
+        <Login />
+      </ErrorBoundary>
+    )
   },
   {
     path: navigationRoutes.register,
     element: (
       <Suspense>
-        <Register />
+        <ErrorBoundary>
+          <Register />
+        </ErrorBoundary>
       </Suspense>
     )
   },
@@ -30,7 +36,9 @@ const router = createBrowserRouter([
     path: navigationRoutes.continueRegister,
     element: (
       <Suspense>
-        <RegisterContinue />
+        <ErrorBoundary>
+          <RegisterContinue />
+        </ErrorBoundary>
       </Suspense>
     )
   },
@@ -38,7 +46,9 @@ const router = createBrowserRouter([
     path: navigationRoutes.forgotPassword,
     element: (
       <Suspense>
-        <PasswordReset />
+        <ErrorBoundary>
+          <PasswordReset />
+        </ErrorBoundary>
       </Suspense>
     )
   },
@@ -46,7 +56,9 @@ const router = createBrowserRouter([
     path: navigationRoutes.changePassword,
     element: (
       <Suspense>
-        <CreatePassword />
+        <ErrorBoundary>
+          <CreatePassword />
+        </ErrorBoundary>
       </Suspense>
     )
   }

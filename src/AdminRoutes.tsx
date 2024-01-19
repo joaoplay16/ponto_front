@@ -1,10 +1,13 @@
 import { lazy, Suspense } from "react"
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import App from "./App"
+import ErrorBoundary from "./Error"
 import { navigationRoutes as navRoutes } from "./RoutePaths"
 
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"))
-const WorkingHoursReport = lazy(() => import("./pages/admin/WorkingHoursReport"))
+const WorkingHoursReport = lazy(
+  () => import("./pages/admin/WorkingHoursReport")
+)
 const UsersReport = lazy(() => import("./pages/admin/UsersReport"))
 const UserRegister = lazy(() => import("./pages/admin/UserRegister"))
 const UserProfile = lazy(() => import("./pages/admin/UserProfile"))
@@ -16,7 +19,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    ),
     children: [
       {
         index: true,
@@ -65,7 +72,7 @@ const router = createBrowserRouter([
             <UserProfile />
           </Suspense>
         )
-      },
+      }
     ]
   }
 ])
