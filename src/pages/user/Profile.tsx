@@ -9,6 +9,7 @@ import { useAuth } from "../../contexts"
 import { ChangeEvent, useEffect, useState } from "react"
 import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
+import { Usuario } from "../../types"
 
 type FormUpdateProfileData = {
   phone: string
@@ -19,12 +20,35 @@ type FormUpdateProfileData = {
 const Profile = () => {
   const { userInfo, logout } = useAuth()
 
+  const [user, setUser] = useState<Usuario | null>(null)
   const [editMode, setEditMode] = useState(false)
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null)
   const [updateStatus, setUpdateStatus] = useState<{
     success: boolean
     message: string
   } | null>(null)
+
+  useEffect(() => {
+    if (userInfo?.user?.id)
+      apiService
+        .getUser(userInfo?.user?.id)
+        .then((user) => {
+          setUser(user)
+        })
+        .catch((error: AxiosError<ApiErrorResponse>) => {
+          if (error.response?.status == 403) {
+            logout()
+          }
+
+          const errorMessage =
+            error.response?.data.error || "Erro ao atualizar usuário"
+
+          setUpdateStatus({ success: false, message: errorMessage })
+
+          console.log(`${errorMessage} -> ${error.message}`)
+        })
+    setUpdateStatus(null)
+  }, [editMode])
 
   const {
     register,
@@ -39,8 +63,8 @@ const Profile = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>()
 
   useEffect(() => {
-    setPhoneNumber(userInfo.user?.celular || "")
-  }, [userInfo.user?.celular])
+    setPhoneNumber(user?.celular || "")
+  }, [user?.celular])
 
   async function onSubmit(data: FormUpdateProfileData) {
     const { password, repeatPassword } = data
@@ -50,8 +74,9 @@ const Profile = () => {
     if (!passwordMatch) return
 
     if (userInfo.user) {
-      const { id, nome, nome_de_usuario, ativo, cargo, e_admin, email } =
-        userInfo.user
+      if (!user) return
+
+      const { id, nome, nome_de_usuario, ativo, cargo, e_admin, email } = user
 
       apiService
         .updateUser({
@@ -65,31 +90,28 @@ const Profile = () => {
           celular: data.phone
         })
         .then((affectedRows) => {
-          if (affectedRows[0] > 0) {
-            setUpdateStatus({
-              success: true,
-              message: "Atualizado com sucesso"
-            })
-            reset()
-            setPhoneNumber("")
-          }
+          // if (affectedRows[0] > 0) {
+          setUpdateStatus({
+            success: true,
+            message: "Atualizado com sucesso"
+          })
+          reset()
+          setPhoneNumber(data.phone)
+          // }
         })
         .catch((error: AxiosError<ApiErrorResponse>) => {
-
           if (error.response?.status == 403) {
             logout()
           }
-          
+
           const errorMessage =
-            error.response?.data.error || "Erro ao enviar email"
+            error.response?.data.error || "Erro ao atualizar usuário"
 
           setUpdateStatus({ success: false, message: errorMessage })
 
           console.log(`${errorMessage} -> ${error.message}`)
         })
     }
-
-    console.log("Submitted details:", data)
   }
 
   const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -109,24 +131,19 @@ const Profile = () => {
               <img
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 className="h-28 w-28 rounded-full border-4 border-orange-400 bg-slate-600"></img>
-              <span className="font-medium">{userInfo.user?.nome}</span>
+              <span className="font-medium">{user?.nome}</span>
               <span className="font-medium">
                 Nome de usuário{" "}
-                <span className="font-normal">
-                  {userInfo.user?.nome_de_usuario}
-                </span>
+                <span className="font-normal">{user?.nome_de_usuario}</span>
               </span>
               <span className="font-medium">
-                E-mail{" "}
-                <span className="font-normal">{userInfo.user?.email}</span>
+                E-mail <span className="font-normal">{user?.email}</span>
               </span>
               <span className="font-medium">
-                Celular{" "}
-                <span className="font-normal">{userInfo.user?.celular}</span>
+                Celular <span className="font-normal">{user?.celular}</span>
               </span>
               <span className="font-medium">
-                Cargo{" "}
-                <span className="font-normal">{userInfo.user?.cargo}</span>
+                Cargo <span className="font-normal">{user?.cargo}</span>
               </span>
               <div className="self-start">
                 <Button onClick={() => setEditMode(true)}>
@@ -143,7 +160,7 @@ const Profile = () => {
               <img
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 className="h-28 w-28 rounded-full border-4 border-orange-400 bg-slate-600"></img>
-              <span className="font-medium">{userInfo.user?.nome}</span>
+              <span className="font-medium">{user?.nome}</span>
               <form
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}
@@ -181,7 +198,7 @@ const Profile = () => {
                     pattern: {
                       value: /^[^\s]{8,}$/,
                       message: "A senha não pode conter espaços"
-                    }
+                    },
                   })}
                 />
                 <ValidationError fieldError={errors.password} />
@@ -198,7 +215,7 @@ const Profile = () => {
                     pattern: {
                       value: /^[^\s]{8,}$/,
                       message: "A senha não pode conter espaços"
-                    }
+                    },
                   })}
                 />
                 <ValidationError fieldError={errors.repeatPassword} />
