@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form"
 const UserProfile = () => {
   const { id } = useParams()
 
-  const { logout } = useAuth()
+  const { logout, userInfo } = useAuth()
 
   const [user, setUser] = useState<Usuario | null>(null)
 
@@ -27,7 +27,6 @@ const UserProfile = () => {
           setUser(user)
         })
         .catch((error: AxiosError<ApiErrorResponse>) => {
-
           if (error.response?.status == 403) {
             logout()
           }
@@ -65,7 +64,6 @@ const UserProfile = () => {
           }
         })
         .catch((error: AxiosError<ApiErrorResponse>) => {
-
           if (error.response?.status == 403) {
             logout()
           }
@@ -113,11 +111,13 @@ const UserProfile = () => {
             <span className="font-medium">
               Cargo <span className="font-normal">{user?.cargo}</span>
             </span>
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
-              <Button type="submit">
-                {user?.ativo ? "Desativar" : "Ativar"}
-              </Button>
-            </form>
+            {user?.id !== userInfo.user?.id && (
+              <form noValidate onSubmit={handleSubmit(onSubmit)}>
+                <Button type="submit">
+                  {user?.ativo ? "Desativar" : "Ativar"}
+                </Button>
+              </form>
+            )}
           </div>
           {updateStatus?.success && (
             <div
