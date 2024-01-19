@@ -70,6 +70,9 @@ const WorkingHoursReport = () => {
     <div>
       <ScreenTitle title="Cadastro de colaborador" />
       <hr className="border-t-2" />
+      <h5 className="my-1 text-sm text-gray-600 md:my-3 md:text-[20px] ">
+      Você está na área administrativa para cadastro de colaboradores.
+      </h5>
       <div className="flex max-w-96 flex-col items-center gap-2 rounded-xl bg-gray-200 px-3 py-2 text-sm text-slate-600 shadow-md">
         <img
           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
