@@ -1,4 +1,4 @@
-import { HTMLProps, MouseEvent, ReactNode, useState } from "react"
+import { HTMLProps, ReactNode, useEffect, useRef, useState } from "react"
 import { useAuth } from "../contexts"
 import { Link } from "react-router-dom"
 import { navigationRoutes } from "../RoutePaths"
@@ -20,7 +20,7 @@ type HeaderItemDropdownProps = {
 
 const HeaderItemDropdown = ({ title, items }: HeaderItemDropdownProps) => {
   const [isExpanded, setExpanded] = useState(true)
-  const handleExpand = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleExpand = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     setExpanded((prev) => !prev)
   }
@@ -59,10 +59,29 @@ const HeaderItem = ({ title, to: link }: HeaderItemProps) => {
 const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false)
 
-  const handleOpenProfileMenu = (e: MouseEvent<HTMLButtonElement>) => {
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const handleOpenProfileMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     setProfileDropdownOpen((prev) => !prev)
   }
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setProfileDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener("click", handleOutsideClick)
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick)
+    }
+  }, [])
 
   const { userInfo, logout } = useAuth()
 
@@ -112,7 +131,7 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
           </button>
 
           {/* Profile dropdown */}
-          <div className="relative ml-3">
+          <div className="relative ml-3" ref={dropdownRef}>
             <button
               type="button"
               className="relative flex items-center gap-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -144,6 +163,7 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
               tabIndex={-1}>
               <Link
                 to={navigationRoutes.user.profile}
+                onClick={() => setProfileDropdownOpen(false)}
                 className="block px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
                 tabIndex={-1}
