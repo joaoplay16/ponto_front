@@ -86,7 +86,7 @@ const Dashboard = () => {
       <Modal
         open={modalOpen}
         tittle={"Bater o ponto"}
-        description={"Você vai bater o ponto mesmo?"}
+        description={"Ao bater o ponto, você confirmará o início/fim do seu expediente. Tem certeza de que deseja continuar?"}
         onPositiveButtonClick={() => {
           setModalOpen(false)
           handleDoClokIn()
