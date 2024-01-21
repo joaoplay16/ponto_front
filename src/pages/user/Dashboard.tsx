@@ -1,13 +1,36 @@
-import { useState } from "react"
-import { DashboarItem, DoClockIn, ScreenTitle } from "../../components"
+import { MouseEvent, useState } from "react"
+import { DashboarItem, DoClockIn, Modal, ScreenTitle } from "../../components"
 import ClockInTable from "../../components/ClockInTable"
 import { useAuth } from "../../contexts"
+import { apiService } from "../../services/apiService"
 
 const Dashboard = () => {
   const { userInfo } = useAuth()
   const userId = userInfo.user?.id
 
   const [loadTrigger, setLoadTrigger] = useState<number>(0)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [clockInSuccess, setClockInSuccess] = useState<boolean | null>(null)
+
+  const handleDoClokIn = () => {
+    if (userId) {
+      apiService
+        .doClockIn(userId)
+        .then(() => {
+          setClockInSuccess(true)
+          setLoadTrigger( prev => prev + 1)
+          console.log("Sucesso ao bater o ponto")
+        })
+        .catch((error) => {
+          setClockInSuccess(false)
+          console.log("Erro ao bater o ponto")
+        })
+
+      setTimeout(() => {
+        setClockInSuccess(null)
+      }, 3000)
+    }
+  }
 
   return (
     <>
@@ -45,9 +68,8 @@ const Dashboard = () => {
           <>
             <DoClockIn
               userId={userId}
-              onClockIn={() => {
-                setLoadTrigger((prev) => prev + 1)
-              }}
+              onClockInClick={() => setModalOpen(true)}
+              clockInSuccess={clockInSuccess}
             />
             <div className="">
               <ClockInTable
@@ -60,6 +82,19 @@ const Dashboard = () => {
           </>
         )}
       </div>
+
+      <Modal
+        open={modalOpen}
+        tittle={"Bater o ponto"}
+        description={"Você vai bater o ponto mesmo?"}
+        onPositiveButtonClick={() => {
+          setModalOpen(false)
+          handleDoClokIn()
+        }}
+        onNegativeButtonClick={() => {
+          setModalOpen(false)
+        }}
+      />
     </>
   )
 }
