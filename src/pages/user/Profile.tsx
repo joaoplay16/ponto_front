@@ -144,7 +144,7 @@ const Profile = () => {
                 E-mail <span className="font-normal">{user?.email}</span>
               </span>
               <span className="font-medium">
-                Celular <span className="font-normal">{user?.celular}</span>
+              Celular <span className="font-normal">{formatCellphone(user?.celular || "")}</span>
               </span>
               <span className="font-medium">
                 Cargo <span className="font-normal">{user?.cargo}</span>

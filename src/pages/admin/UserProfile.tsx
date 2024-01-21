@@ -6,6 +6,7 @@ import { Usuario } from "../../types"
 import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 import { useForm } from "react-hook-form"
+import { formatCellphone } from "../../utils"
 
 const UserProfile = () => {
   const { id } = useParams()
@@ -105,8 +106,7 @@ const UserProfile = () => {
               E-mail <span className="font-normal">{user?.email}</span>
             </span>
             <span className="font-medium">
-              Celular
-              <span className="font-normal">{user?.celular}</span>
+              Celular <span className="font-normal">{formatCellphone(user?.celular || "")}</span>
             </span>
             <span className="font-medium">
               Cargo <span className="font-normal">{user?.cargo}</span>

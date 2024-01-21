@@ -4,6 +4,7 @@ import { UsuariosData, apiService } from "../services/apiService"
 import Select from "./Select"
 import { Usuario } from "../types"
 import { Link } from "react-router-dom"
+import { formatCellphone } from "../utils"
 
 const columns: TableColumn<Usuario>[] = [
   {
@@ -45,7 +46,8 @@ const columns: TableColumn<Usuario>[] = [
     name: "Celular",
     selector: (row) => row.celular,
     wrap: true,
-    minWidth: "150px"
+    minWidth: "150px",
+    format: (row) => formatCellphone(row.celular)
   },
   {
     name: "Ativo",
