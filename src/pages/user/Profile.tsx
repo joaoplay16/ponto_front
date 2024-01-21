@@ -10,6 +10,7 @@ import { ChangeEvent, useEffect, useState } from "react"
 import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 import { Usuario } from "../../types"
+import { formatCellphone } from "../../utils"
 
 type FormUpdateProfileData = {
   phone: string
@@ -62,8 +63,10 @@ const Profile = () => {
 
   const [phoneNumber, setPhoneNumber] = useState<string>()
 
+
+
   useEffect(() => {
-    setPhoneNumber(user?.celular || "")
+    setPhoneNumber(formatCellphone(user?.celular || ""))
   }, [user?.celular])
 
   async function onSubmit(data: FormUpdateProfileData) {
@@ -87,7 +90,7 @@ const Profile = () => {
           e_admin,
           ativo,
           email,
-          celular: data.phone
+          celular: data.phone.replace(/\D/g, "")
         })
         .then((affectedRows) => {
           // if (affectedRows[0] > 0) {
@@ -115,9 +118,10 @@ const Profile = () => {
   }
 
   const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-    var numericValue = e.target.value.replace(/\D/g, "") // Remove todos os caracteres não numéricos
-    numericValue = numericValue.slice(0, 11) // limita para 11 digitos
-    setPhoneNumber(numericValue)
+    // Remove todos os caracteres não numéricos exceto '-', '(' e ')'
+    var numericValue = e.target.value.replace(/[^0-9\(\)-]/g, "") 
+
+    setPhoneNumber(formatCellphone(numericValue || ""))
   }
 
   return (
@@ -174,11 +178,11 @@ const Profile = () => {
                   {...register("phone", {
                     required: "Você deve digitar seu numéro",
                     minLength: {
-                      value: 11,
+                      value: 15,
                       message: "O número deve ter pelo menos 11 digitos"
                     },
                     pattern: {
-                      value: /^[0-9]+$/,
+                      value: /^[0-9\(\) -]+$/,
                       message: "Por favor, insira apenas números"
                     }
                   })}
@@ -198,7 +202,7 @@ const Profile = () => {
                     pattern: {
                       value: /^[^\s]{8,}$/,
                       message: "A senha não pode conter espaços"
-                    },
+                    }
                   })}
                 />
                 <ValidationError fieldError={errors.password} />
@@ -215,7 +219,7 @@ const Profile = () => {
                     pattern: {
                       value: /^[^\s]{8,}$/,
                       message: "A senha não pode conter espaços"
-                    },
+                    }
                   })}
                 />
                 <ValidationError fieldError={errors.repeatPassword} />

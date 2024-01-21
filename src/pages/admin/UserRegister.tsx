@@ -3,6 +3,7 @@ import { Button, ScreenTitle, ValidationError } from "../../components"
 import { ChangeEvent, useState } from "react"
 import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
+import { formatCellphone } from "../../utils"
 
 type FormUpdateUserRegisterData = {
   name: string
@@ -37,7 +38,7 @@ const WorkingHoursReport = () => {
       .registerUser({
         nome: name,
         nome_de_usuario: user_name,
-        celular: phone,
+        celular: phone.replace(/\D/g, ""),
         email,
         e_admin: isAdmin
       })
@@ -61,11 +62,11 @@ const WorkingHoursReport = () => {
   }
 
   const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-    var numericValue = e.target.value.replace(/\D/g, "") // Remove todos os caracteres não numéricos
-    numericValue = numericValue.slice(0, 11) // limita para 11 digitos
-    setPhoneNumber(numericValue)
-  }
+    // Remove todos os caracteres não numéricos exceto '-', '(' e ')'
+    var numericValue = e.target.value.replace(/[^0-9\(\)-]/g, "") 
 
+    setPhoneNumber(formatCellphone(numericValue || ""))
+  }
   return (
     <div>
       <ScreenTitle title="Cadastro de colaborador" />
@@ -122,11 +123,11 @@ const WorkingHoursReport = () => {
             {...register("phone", {
               required: "Você deve digitar seu numéro",
               minLength: {
-                value: 11,
+                value: 15,
                 message: "O número deve ter pelo menos 11 digitos"
               },
               pattern: {
-                value: /^[0-9]+$/,
+                value: /^[0-9\(\) -]+$/,
                 message: "Por favor, insira apenas números"
               }
             })}

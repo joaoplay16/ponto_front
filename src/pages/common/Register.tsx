@@ -4,6 +4,7 @@ import { ChangeEvent, useState } from "react"
 import { ApiErrorResponse, apiService } from "../../services/apiService"
 import { AxiosError } from "axios"
 import { Link } from "react-router-dom"
+import { formatCellphone } from "../../utils"
 
 type FormUpdateUserRegisterData = {
   name: string
@@ -38,7 +39,7 @@ const UserRegister = () => {
       .registerUser({
         nome: name,
         nome_de_usuario: user_name,
-        celular: phone,
+        celular: phone.replace(/\D/g, ""),
         email,
         e_admin: isAdmin
       })
@@ -64,11 +65,11 @@ const UserRegister = () => {
   }
 
   const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-    var numericValue = e.target.value.replace(/\D/g, "") // Remove todos os caracteres não numéricos
-    numericValue = numericValue.slice(0, 11) // limita para 11 digitos
-    setPhoneNumber(numericValue)
-  }
+    // Remove todos os caracteres não numéricos exceto '-', '(' e ')'
+    var numericValue = e.target.value.replace(/[^0-9\(\)-]/g, "") 
 
+    setPhoneNumber(formatCellphone(numericValue || ""))
+  }
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="w-full max-w-80 gap-2 rounded-xl bg-gray-200 p-6 text-sm text-slate-600 shadow-md">
@@ -119,11 +120,11 @@ const UserRegister = () => {
             {...register("phone", {
               required: "Você deve digitar seu numéro",
               minLength: {
-                value: 11,
+                value: 15,
                 message: "O número deve ter pelo menos 11 digitos"
               },
               pattern: {
-                value: /^[0-9]+$/,
+                value: /^[0-9\(\) -]+$/,
                 message: "Por favor, insira apenas números"
               }
             })}
