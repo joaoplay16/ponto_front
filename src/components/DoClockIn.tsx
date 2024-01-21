@@ -1,15 +1,14 @@
-import React, { useState, useEffect, MouseEvent } from "react"
-import { apiService } from "../services/apiService"
+import { useEffect, useState, MouseEvent } from "react"
 
 const DoClockIn = ({
-  userId,
-  onClockIn
+  onClockInClick,
+  clockInSuccess
 }: {
   userId: number
-  onClockIn: () => void
+  onClockInClick: (e: MouseEvent<HTMLButtonElement>) => void
+  clockInSuccess: boolean | null
 }) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
-  const [clockInSuccess, setClockInSuccess] = useState<boolean | null>(null)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -18,25 +17,6 @@ const DoClockIn = ({
 
     return () => clearInterval(intervalId)
   }, [])
-
-  const handleDoClokIn = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    apiService
-      .doClockIn(userId)
-      .then(() => {
-        onClockIn()
-        setClockInSuccess(true)
-        console.log("Sucesso ao bater o ponto")
-      })
-      .catch((error) => {
-        setClockInSuccess(false)
-        console.log("Erro ao bater o ponto")
-      })
-
-    setTimeout(() => {
-      setClockInSuccess(null)
-    }, 3000)
-  }
 
   const formattedDateTime = currentDateTime.toLocaleString("pt-BR", {
     year: "numeric",
@@ -51,7 +31,7 @@ const DoClockIn = ({
     <div className="flex h-64 w-64 flex-col items-center justify-between rounded-xl bg-gray-200 p-3 text-slate-600 shadow-md">
       <h4 className="text-center font-light">{formattedDateTime}</h4>
       <button
-        onClick={handleDoClokIn}
+        onClick={onClockInClick}
         className={`h-32 w-32 rounded-full bg-slate-600 ring-4 ${
           clockInSuccess === null
             ? ""
