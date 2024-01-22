@@ -46,11 +46,6 @@ const Dashboard = () => {
         />
         <DashboarItem
           title="Horas trabalhadas"
-          smallInfo="este mês"
-          info="36:00:58 saldo atual"
-        />
-        <DashboarItem
-          title="Horas trabalhadas"
           smallInfo="hoje"
           info="04:30:58 saldo atual"
         />
