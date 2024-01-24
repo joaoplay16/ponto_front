@@ -44,14 +44,14 @@ const HeaderItemDropdown = ({ title, items }: HeaderItemDropdownProps) => {
   )
 }
 
-const HeaderItem = ({ title, to: link }: HeaderItemProps) => {
+const HeaderItem = ({ title, to }: HeaderItemProps) => {
   return (
     <li className="block">
-      <a
-        href={link}
+      <Link
+        to={to}
         className="block rounded px-2 py-1 ring-2 ring-slate-500 duration-100 hover:bg-slate-800/50 hover:text-orange-500 hover:ring-slate-400 focus:bg-slate-400/50 focus:hover:text-inherit ">
         {title}
-      </a>
+      </Link>
     </li>
   )
 }
@@ -186,7 +186,7 @@ const HeaderForAdmin = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
       <nav>
         <div
           className={`flex flex-col gap-2 overflow-hidden bg-gray-800 text-slate-300 duration-200 md:hidden ${isMenuOpen ? "max-h-68 px-4 py-2" : "max-h-0 p-0"}`}>
-          <HeaderItem title="Dashboard" to="#" />
+          <HeaderItem title="Dashboard" to="/" />
           <HeaderItem title="Colaboradores" to={navigationRoutes.admin.report.users} />
           <HeaderItemDropdown
             title="Relatórios"
