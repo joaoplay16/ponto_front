@@ -13,11 +13,13 @@ const columns: TableColumn<Usuario>[] = [
     selector: (row) => row.nome_de_usuario,
     sortable: true,
     cell: (row) => {
-        return(
-          <Link className="text-blue-500 hover:text-orange-700" to={`/admin/usuario/${row.id}/perfil`}>
-            {row.nome}
-          </Link>
-        )
+      return (
+        <Link
+          className="text-blue-500 hover:text-orange-700"
+          to={`/admin/usuario/${row.id}/perfil`}>
+          {row.nome}
+        </Link>
+      )
     },
     center: true,
     wrap: true,
@@ -54,7 +56,9 @@ const columns: TableColumn<Usuario>[] = [
     name: "Ativo",
     selector: (row) => row.ativo,
     sortable: true,
-    format: (row) => { return row.ativo ===  1 ? "sim" : "não"},
+    format: (row) => {
+      return row.ativo === 1 ? "sim" : "não"
+    }
   }
 ]
 
@@ -72,56 +76,56 @@ export const AllUsersTable = ({
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedCargo, setSelectedCargo] = useState("colaborador")
 
-  const fetchAllUsersWorkingHours = async () => {
-    setLoading(true)
-
+  const fetchAllUsersWorkingHours = async (
+    cargo: string,
+    limit: number,
+    offset: number
+  ) => {
     //A fórmula (currentPage - 1) * perPage é usada para calcular o deslocamento com base na página atual e no número de itens por página.
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular perPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * perPage registros para chegar à terceira página, e assim por diante.
+    setLoading(true)
 
-    apiService.allUsersReport(
-      selectedCargo,
-      perPage,
-      (currentPage - 1) * perPage
-    ).then((workingHoursData) => {
+    apiService
+      .allUsersReport(cargo, limit, offset)
+      .then((workingHoursData) => {
         setData(workingHoursData.rows)
         setTotalRows(workingHoursData.count)
-    }).catch((error: AxiosError) => {
+      })
+      .catch((error: AxiosError) => {
         console.log("Erro ao obter relatório de todos os usuários")
-    })
-
-    setLoading(false)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    fetchAllUsersWorkingHours()
-  }
-
-  const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setLoading(true)
-
-    //A fórmula (page - 1) * newPerPage é usada para calcular o deslocamento com base na página atual e no número de itens por página.
-
-    //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular newPerPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * newPerPage registros para chegar à terceira página, e assim por diante.
-
-    apiService.allUsersReport(
+    fetchAllUsersWorkingHours(
       selectedCargo,
       perPage,
       (currentPage - 1) * perPage
-    ).then((workingHoursData) => {
-        setData(workingHoursData.rows)
-    }).catch((error: AxiosError) => {
-        console.log("Erro ao obter relatório de todos os usuários")
-    })
+    )
+  }
+
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    fetchAllUsersWorkingHours(
+      selectedCargo,
+      newPerPage,
+      (currentPage - 1) * newPerPage
+    )
 
     setPerPage(newPerPage)
     setCurrentPage(page)
-    setLoading(false)
   }
 
   useEffect(() => {
-    fetchAllUsersWorkingHours()
+    fetchAllUsersWorkingHours(
+      selectedCargo,
+      perPage,
+      (currentPage - 1) * perPage
+    )
   }, [currentPage, perPage, selectedCargo])
 
   const paginationComponentOptions = {
@@ -133,7 +137,7 @@ export const AllUsersTable = ({
 
   return (
     <div className="flex flex-col ">
-        <div className="flex flex-grow-0 justify-end gap-2">
+      <div className="flex flex-grow-0 justify-end gap-2">
         <Select
           title={"Cargo"}
           values={["colaborador", "gestor"]}
