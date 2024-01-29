@@ -5,6 +5,7 @@ import Select from "./Select"
 import { Usuario } from "../types"
 import { Link } from "react-router-dom"
 import { formatCellphone } from "../utils"
+import { AxiosError } from "axios"
 
 const columns: TableColumn<Usuario>[] = [
   {
@@ -78,14 +79,17 @@ export const AllUsersTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular perPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * perPage registros para chegar à terceira página, e assim por diante.
 
-    const workingHoursData: UsuariosData = await apiService.allUsersReport(
+    apiService.allUsersReport(
       selectedCargo,
       perPage,
       (currentPage - 1) * perPage
-    )
+    ).then((workingHoursData) => {
+        setData(workingHoursData.rows)
+        setTotalRows(workingHoursData.count)
+    }).catch((error: AxiosError) => {
+        console.log("Erro ao obter relatório de todos os usuários")
+    })
 
-    setData(workingHoursData.rows)
-    setTotalRows(workingHoursData.count)
     setLoading(false)
   }
 
@@ -101,13 +105,16 @@ export const AllUsersTable = ({
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular newPerPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * newPerPage registros para chegar à terceira página, e assim por diante.
 
-    const workingHoursData: UsuariosData = await apiService.allUsersReport(
+    apiService.allUsersReport(
       selectedCargo,
       perPage,
       (currentPage - 1) * perPage
-    )
+    ).then((workingHoursData) => {
+        setData(workingHoursData.rows)
+    }).catch((error: AxiosError) => {
+        console.log("Erro ao obter relatório de todos os usuários")
+    })
 
-    setData(workingHoursData.rows)
     setPerPage(newPerPage)
     setCurrentPage(page)
     setLoading(false)
