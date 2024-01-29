@@ -6,6 +6,7 @@ import { useAuth } from "../../contexts"
 import { AxiosError } from "axios"
 import { useState } from "react"
 import { ApiErrorResponse } from "../../services/apiService"
+import Loading from "../../components/Loading"
 
 type FormUpdateLoginData = {
   email: string
@@ -20,6 +21,7 @@ const Login = () => {
     success: boolean
     message: string
   } | null>(null)
+  const [isDoingLogin, setDoingLogin] = useState(false)
   const {
     register,
     handleSubmit,
@@ -30,6 +32,7 @@ const Login = () => {
   })
 
   async function onSubmit(data: FormUpdateLoginData) {
+    setDoingLogin(true)
     login(data.email, data.password)
       .then((user) => {
         console.log("USUARIO LOGADO", user)
@@ -38,11 +41,13 @@ const Login = () => {
       .catch((error: AxiosError<ApiErrorResponse>) => {
         const errorMessage = error.response?.data.error || "Erro ao fazer login"
         setLoginStatus({
-            success: false,
-            message: errorMessage
+          success: false,
+          message: errorMessage
         })
 
         console.log(`${errorMessage} -> ${error.message}`)
+      }).finally(() => {
+        setDoingLogin(false)
       })
   }
 
@@ -102,7 +107,9 @@ const Login = () => {
               Esqueceu a senha?
             </Link>
           </div>
-          <Button>Login</Button>
+          <Button className="flex justify-center">
+            {isDoingLogin ? <Loading className="text-teal-200"/> : "Login" }
+          </Button>
 
           <div className="flex  pt-4 text-[16px]">
             <span>
