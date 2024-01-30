@@ -54,7 +54,12 @@ export const WorkingHoursTable = ({
 
   const { logout } = useAuth()
 
-  const fetchClockInData = async () => {
+  const fetchClockInData = async (
+    limit: number,
+    offset: number,
+    mes: number,
+    ano: number
+  ) => {
     setLoading(true)
 
     //A fórmula (currentPage - 1) * perPage é usada para calcular o deslocamento com base na página atual e no número de itens por página.
@@ -90,55 +95,43 @@ export const WorkingHoursTable = ({
         console.log(
           `Erro ao buscar horas trabalhadas do usuário -> ${ error.message}`,
         )
+      }).finally(() => {
+        setLoading(false)
       })
   }
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    fetchClockInData()
+    fetchClockInData(
+      perPage,
+      (currentPage - 1) * perPage,
+      selectedMonth,
+      selectedYear
+    )
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setLoading(true)
-
     //A fórmula (page - 1) * newPerPage é usada para calcular o deslocamento com base na página atual e no número de itens por página.
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular newPerPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * newPerPage registros para chegar à terceira página, e assim por diante.
 
-    apiService
-      .userWorkingHoursReport({
-        userId: userId,
-        limit: newPerPage,
-        offset: (page - 1) * newPerPage,
-        mes: selectedMonth,
-        ano: selectedYear
-      })
-      .then((workingHoursData) => {
-        const data: WorkingHoursTableType[] = workingHoursData.rows.map(
-          (item) =>
-            ({
-              ...item,
-              dia_da_semana: getDayName(item.dia_da_semana)
-            }) as WorkingHoursTableType
-        )
-        setData(data)
-        setLoading(false)
-      })
-      .catch((error: AxiosError<ApiErrorResponse>) => {
-        setLoading(false)
-        if (error.response?.status == 403) {
-          logout()
-        }
-        console.log(
-          `Erro ao buscar horas trabalhadas do usuário -> ${ error.message}`,
-        )
-      })
+    fetchClockInData(
+      newPerPage,
+      (currentPage - 1) * newPerPage,
+      selectedMonth,
+      selectedYear
+    )
     setPerPage(newPerPage)
     setCurrentPage(page)
   }
 
   useEffect(() => {
-    fetchClockInData()
+    fetchClockInData(
+      perPage,
+      (currentPage - 1) * perPage,
+      selectedMonth,
+      selectedYear
+    )
   }, [currentPage, perPage, selectedYear, selectedMonth])
 
   useEffect(() => {
