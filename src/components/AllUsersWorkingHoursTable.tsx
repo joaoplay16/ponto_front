@@ -13,7 +13,9 @@ const columns: TableColumn<WorkingHoursWithUserTableType>[] = [
     name: "Data",
     selector: (row) => row.data,
     sortable: true,
-    format: (row) => { return formatDate(row.data) }
+    format: (row) => {
+      return formatDate(row.data)
+    }
   },
   {
     name: "Dia da semana",
@@ -37,7 +39,11 @@ const columns: TableColumn<WorkingHoursWithUserTableType>[] = [
     name: "Horas trabalhadas",
     selector: (row) => row.horas_trabalhadas,
     sortable: true,
-    format: (row) => { return row.horas_trabalhadas != null ? row.horas_trabalhadas : "Jornada incompleta"},
+    format: (row) => {
+      return row.horas_trabalhadas != null
+        ? row.horas_trabalhadas
+        : "Jornada incompleta"
+    },
     wrap: true,
     minWidth: "150px"
   }
@@ -61,7 +67,13 @@ export const AllUsersWorkingHoursTable = ({
 
   const { logout } = useAuth()
 
-  const fetchAllUsersWorkingHours = async () => {
+  const fetchAllUsersWorkingHours = async (
+    limit: number,
+    offset: number,
+    mes: number,
+    ano: number,
+    cargo: string
+  ) => {
     setLoading(true)
 
     //A fórmula (currentPage - 1) * perPage é usada para calcular o deslocamento com base na página atual e no número de itens por página.
@@ -70,11 +82,11 @@ export const AllUsersWorkingHoursTable = ({
 
     apiService
       .allUsersWorkingHoursReport({
-        limit: perPage,
-        offset: (currentPage - 1) * perPage,
-        mes: selectedMonth,
-        ano: selectedYear,
-        cargo: selectedCargo
+        limit,
+        offset,
+        mes,
+        ano,
+        cargo
       })
       .then((workingHoursData) => {
         const data: WorkingHoursWithUserTableType[] = workingHoursData.rows.map(
@@ -99,58 +111,48 @@ export const AllUsersWorkingHoursTable = ({
           "Errro ao buscar horas trabalhadas dos usuários -> ",
           error.message
         )
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    fetchAllUsersWorkingHours()
+    fetchAllUsersWorkingHours(
+      perPage,
+      (currentPage - 1) * perPage,
+      selectedMonth,
+      selectedYear,
+      selectedCargo
+    )
   }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setLoading(true)
-
     //A fórmula (page - 1) * newPerPage é usada para calcular o deslocamento com base na página atual e no número de itens por página.
 
     //Se a página for a primeira (1), você não precisará pular nenhum registro, pois estará na primeira página. Se a página for a segunda (2), você precisará pular newPerPage registros para chegar à segunda página. Se a página for a terceira (3), você precisará pular 2 * newPerPage registros para chegar à terceira página, e assim por diante.
 
-    apiService
-      .allUsersWorkingHoursReport({
-        limit: perPage,
-        offset: (currentPage - 1) * perPage,
-        mes: selectedMonth,
-        ano: selectedYear,
-        cargo: selectedCargo
-      })
-      .then((workingHoursData) => {
-        const data: WorkingHoursWithUserTableType[] = workingHoursData.rows.map(
-          (item) =>
-            ({
-              ...item,
-              dia_da_semana: getDayName(item.dia_da_semana)
-            }) as WorkingHoursWithUserTableType
-        )
+    fetchAllUsersWorkingHours(
+      newPerPage,
+      (currentPage - 1) * newPerPage,
+      selectedMonth,
+      selectedYear,
+      selectedCargo
+    )
 
-        setData(data)
-        setTotalRows(workingHoursData.count)
-        setLoading(false)
-      })
-      .catch((error: AxiosError) => {
-        setLoading(false)
-
-        if (error.response?.status == 403) {
-          logout()
-        }
-        console.log(
-          "Errro ao buscar horas trabalhadas dos usuários -> ",
-          error.message
-        )
-      })
+    setPerPage(newPerPage)
     setCurrentPage(page)
   }
 
   useEffect(() => {
-    fetchAllUsersWorkingHours()
+    fetchAllUsersWorkingHours(
+      perPage,
+      (currentPage - 1) * perPage,
+      selectedMonth,
+      selectedYear,
+      selectedCargo
+    )
   }, [currentPage, perPage, selectedYear, selectedMonth, selectedCargo])
 
   const paginationComponentOptions = {
