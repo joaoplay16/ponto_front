@@ -1,9 +1,11 @@
 import { HTMLProps, ReactNode, useEffect, useRef, useState } from "react"
-import { useAuth } from "../contexts"
 import { Link } from "react-router-dom"
 import { navigationRoutes } from "../RoutePaths"
+import { useAuth } from "../contexts"
 
 interface HeaderProp extends HTMLProps<HTMLElement> {
+  userName: string
+  isAdmin: boolean
   isMenuOpen: boolean
   openMenu: () => void
 }
@@ -56,7 +58,13 @@ const HeaderItem = ({ title, to }: HeaderItemProps) => {
   )
 }
 
-const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
+const Header = ({
+  openMenu,
+  isMenuOpen,
+  userName,
+  isAdmin,
+  ...props
+}: HeaderProp) => {
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -83,7 +91,7 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
     }
   }, [])
 
-  const { userInfo, logout } = useAuth()
+  const { logout } = useAuth()
 
   return (
     <>
@@ -147,9 +155,7 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
                 alt=""
               />
 
-              <span className="font-medium text-slate-300">
-                {userInfo.user?.nome}
-              </span>
+              <span className="font-medium text-slate-300">{userName}</span>
             </button>
 
             <div
@@ -183,28 +189,58 @@ const Header = ({ openMenu, isMenuOpen, ...props }: HeaderProp) => {
           </div>
         </div>
       </nav>
+      {/* MOBILE MENU */}
       <nav>
         <div
           className={`flex flex-col gap-2 overflow-hidden bg-gray-800 text-slate-300 duration-200 md:hidden ${isMenuOpen ? "max-h-68 px-4 py-2" : "max-h-0 p-0"}`}>
-          <HeaderItem title="Dashboard" to={"/"} />
-          <HeaderItemDropdown
-            title="Relatórios"
-            items={[
-              <Link
-                to={navigationRoutes.user.report.clockIn}
-                className="mt-1 block rounded px-2 py-0.5 hover:bg-slate-600/50 hover:text-orange-400 ">
-                Ponto
-              </Link>,
-              <Link
-                to={navigationRoutes.user.report.wourkingHours}
-                className="mt-1 block rounded px-2 py-0.5 hover:bg-slate-600/50 hover:text-orange-400 ">
-                Horas trabalhadas
-              </Link>
-            ]}
-          />
-          <HeaderItem title="Calendário" to="#" />
-          <HeaderItem title="Solicitações" to="#" />
-          <HeaderItem title="Configurações" to="#" />
+          {/* USER */}
+          {!isAdmin && (
+            <>
+              <HeaderItem title="Dashboard" to={"/"} />
+              <HeaderItemDropdown
+                title="Relatórios"
+                items={[
+                  <Link
+                    to={navigationRoutes.user.report.clockIn}
+                    className="mt-1 block rounded px-2 py-0.5 hover:bg-slate-600/50 hover:text-orange-400 ">
+                    Ponto
+                  </Link>,
+                  <Link
+                    to={navigationRoutes.user.report.wourkingHours}
+                    className="mt-1 block rounded px-2 py-0.5 hover:bg-slate-600/50 hover:text-orange-400 ">
+                    Horas trabalhadas
+                  </Link>
+                ]}
+              />
+              <HeaderItem title="Calendário" to="#" />
+              <HeaderItem title="Solicitações" to="#" />
+              <HeaderItem title="Configurações" to="#" />
+            </>
+          )}
+
+          {/* ADMIN */}
+          {isAdmin && (
+            <>
+              <HeaderItem title="Dashboard" to="/" />
+              <HeaderItem
+                title="Colaboradores"
+                to={navigationRoutes.admin.report.users}
+              />
+              <HeaderItemDropdown
+                title="Relatórios"
+                items={[
+                  <Link
+                    to={navigationRoutes.admin.report.wourkingHours}
+                    className="mt-1 block rounded px-2 py-0.5 hover:bg-slate-600/50 hover:text-orange-400 ">
+                    Horas trabalhadas
+                  </Link>
+                ]}
+              />
+              <HeaderItem title="Calendário" to="#" />
+              <HeaderItem title="Solicitações" to="#" />
+              <HeaderItem title="Configurações" to="#" />
+            </>
+          )}
         </div>
       </nav>
     </>

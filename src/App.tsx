@@ -1,7 +1,6 @@
 import { useState } from "react"
 import {
   Header,
-  HeaderForAdmin,
   SideBarForUser,
   SidebarForAdmin
 } from "./components"
@@ -33,24 +32,15 @@ function App() {
           />
         )}
         <div className="h-full w-full">
-          {!isAdmin && (
             <Header
+              userName={userInfo.user?.nome || "Usuário"}
+              isAdmin={isAdmin}
               className="sticky top-0 z-10 bg-gray-700 md:flex-grow"
               isMenuOpen={isMenuOpen}
               openMenu={() => {
                 setMenuOpen(!isMenuOpen)
               }}
             />
-          )}
-          {isAdmin && (
-            <HeaderForAdmin
-              className="sticky top-0 z-10 bg-gray-700 md:flex-grow"
-              isMenuOpen={isMenuOpen}
-              openMenu={() => {
-                setMenuOpen(!isMenuOpen)
-              }}
-            />
-          )}
           <div className="flex flex-1 flex-col overflow-y-auto p-4 md:p-10">
             <Outlet />
           </div>
