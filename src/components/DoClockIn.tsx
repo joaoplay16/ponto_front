@@ -9,6 +9,7 @@ const DoClockIn = ({
   clockInSuccess: boolean | null
 }) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
+  const [toogleButtonAnimation, setToogleButtonAnimation] = useState("")
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -28,18 +29,23 @@ const DoClockIn = ({
   })
 
   return (
-    <div className="flex h-64 w-64 flex-col items-center justify-between rounded-xl bg-gray-200 p-3 text-slate-600 shadow-md">
+    <div className="flex h-64 w-64 flex-col items-center justify-between rounded-xl bg-gray-200 p-3 text-slate-600 shadow-md ">
       <h4 className="text-center font-light">{formattedDateTime}</h4>
       <button
-        onClick={onClockInClick}
-        className={`h-32 w-32 rounded-full bg-slate-600 ring-4 ${
+        onClick={(e) => {
+          setToogleButtonAnimation("duration-500 ring-[16px] ring-opacity-0")
+          onClockInClick(e)
+        }}
+        className={`h-32 w-32 rounded-full bg-slate-600 outline outline-4 outline-orange-500 ring-orange-500 ${toogleButtonAnimation}  ${
           clockInSuccess === null
             ? ""
             : clockInSuccess
-              ? "ring-green-500"
-              : "ring-red-500"
-        }`}>
-        $
+              ? "outline-green-500"
+              : "outline-red-500"
+        }`}
+        onTransitionEnd={() => {
+          setToogleButtonAnimation("ring-opacity-100 ring-[0px]")
+        }}>
         {clockInSuccess === null ? (
           ""
         ) : clockInSuccess ? (
