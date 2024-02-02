@@ -9,7 +9,7 @@ const DoClockIn = ({
   clockInSuccess: boolean | null
 }) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
-  const [toogleButtonAnimation, setToogleButtonAnimation] = useState("")
+  const [toogleButtonAnimation, setToogleButtonAnimation] = useState("ring-opacity-100 ring-[0px]")
 
   useEffect(() => {
     const intervalId = setInterval(() => {
